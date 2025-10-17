@@ -4,7 +4,7 @@ if (document.body) {
   createRoot(document.body).render(<App />);
 } else {
   window.addEventListener(
-    "load",
+    "DOMContentLoaded",
     () => {
       createRoot(document.body).render(<App />);
     },

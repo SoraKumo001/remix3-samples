@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@hono/vite-dev-server':
         specifier: 0.23.0
-        version: 0.23.0(hono@4.9.12)(miniflare@4.20251008.0)(wrangler@4.43.0)
+        version: 0.23.0(hono@4.10.0)(miniflare@4.20251008.0)(wrangler@4.43.0)
       '@remix-run/dom':
         specifier: 0.0.0-experimental-remix-jam.1
         version: 0.0.0-experimental-remix-jam.1
@@ -18,24 +18,24 @@ importers:
         specifier: 0.0.0-experimental-remix-jam.1
         version: 0.0.0-experimental-remix-jam.1
       hono:
-        specifier: 4.9.12
-        version: 4.9.12
+        specifier: 4.10.0
+        version: 4.10.0
     devDependencies:
       '@eslint/js':
         specifier: ^9.37.0
         version: 9.37.0
       '@hono/node-server':
         specifier: 1.19.5
-        version: 1.19.5(hono@4.9.12)
+        version: 1.19.5(hono@4.10.0)
       '@hono/vite-build':
         specifier: 1.7.0
-        version: 1.7.0(hono@4.9.12)
+        version: 1.7.0(hono@4.10.0)
       '@playwright/test':
-        specifier: 1.56.0
-        version: 1.56.0
+        specifier: 1.56.1
+        version: 1.56.1
       '@types/node':
-        specifier: ^24.8.0
-        version: 24.8.0
+        specifier: ^24.8.1
+        version: 24.8.1
       eslint:
         specifier: ^9.37.0
         version: 9.37.0
@@ -56,9 +56,9 @@ importers:
         version: 8.46.1(eslint@9.37.0)(typescript@5.9.3)
       vite:
         specifier: npm:rolldown-vite@latest
-        version: rolldown-vite@7.1.16(@types/node@24.8.0)(esbuild@0.25.4)
+        version: rolldown-vite@7.1.16(@types/node@24.8.1)(esbuild@0.25.4)
       wrangler:
-        specifier: ^4.42.0
+        specifier: ^4.43.0
         version: 4.43.0
 
 packages:
@@ -485,8 +485,8 @@ packages:
   '@oxc-project/types@0.94.0':
     resolution: {integrity: sha512-+UgQT/4o59cZfH6Cp7G0hwmqEQ0wE+AdIwhikdwnhWI9Dp8CgSY081+Q3O67/wq3VJu8mgUEB93J9EHHn70fOw==}
 
-  '@playwright/test@1.56.0':
-    resolution: {integrity: sha512-Tzh95Twig7hUwwNe381/K3PggZBZblKUe2wv25oIpzWLr6Z0m4KgV1ZVIjnR6GM9ANEqjZD7XsZEa6JL/7YEgg==}
+  '@playwright/test@1.56.1':
+    resolution: {integrity: sha512-vSMYtL/zOcFpvJCW71Q/OEGQb7KYBPAdKh35WNSkaZA75JlAO8ED8UN6GUNTm3drWomcbcqRPFqQbLae8yBTdg==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -696,8 +696,8 @@ packages:
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
 
-  '@types/node@24.8.0':
-    resolution: {integrity: sha512-5x08bUtU8hfboMTrJ7mEO4CpepS9yBwAqcL52y86SWNmbPX8LVbNs3EP4cNrIZgdjk2NAlP2ahNihozpoZIxSg==}
+  '@types/node@24.8.1':
+    resolution: {integrity: sha512-alv65KGRadQVfVcG69MuB4IzdYVpRwMG/mq8KWOaoOdyY617P5ivaDiMCGOFDWD2sAn5Q0mR3mRtUOgm99hL9Q==}
 
   '@typescript-eslint/eslint-plugin@8.46.1':
     resolution: {integrity: sha512-rUsLh8PXmBjdiPY+Emjz9NX2yHvhS11v0SR6xNJkm5GM1MO9ea/1GoDKlHHZGrOJclL/cZ2i/vRUYVtjRhrHVQ==}
@@ -1005,8 +1005,8 @@ packages:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
     engines: {node: '>=8'}
 
-  hono@4.9.12:
-    resolution: {integrity: sha512-SrTC0YxqPwnN7yKa8gg/giLyQ2pILCKoideIHbYbFQlWZjYt68D2A4Ae1hehO/aDQ6RmTcpqOV/O2yBtMzx/VQ==}
+  hono@4.10.0:
+    resolution: {integrity: sha512-V/S2IyKL6fk5+bEjiQzg74r5BglqAwU20IX3WjdTUFgvmtSqAZjSxN/Zb5lr6/JXVmH0aqkqOq++3UgzOi9+4Q==}
     engines: {node: '>=16.9.0'}
 
   ignore@5.3.2:
@@ -1224,13 +1224,13 @@ packages:
     resolution: {integrity: sha512-5gTmgEY/sqK6gFXLIsQNH19lWb4ebPDLA4SdLP7dsWkIXHWlG66oPuVvXSGFPppYZz8ZDZq0dYYrbHfBCVUb1Q==}
     engines: {node: '>=12'}
 
-  playwright-core@1.56.0:
-    resolution: {integrity: sha512-1SXl7pMfemAMSDn5rkPeZljxOCYAmQnYLBTExuh6E8USHXGSX3dx6lYZN/xPpTz1vimXmPA9CDnILvmJaB8aSQ==}
+  playwright-core@1.56.1:
+    resolution: {integrity: sha512-hutraynyn31F+Bifme+Ps9Vq59hKuUCz7H1kDOcBs+2oGguKkWTU50bBWrtz34OUWmIwpBTWDxaRPXrIXkgvmQ==}
     engines: {node: '>=18'}
     hasBin: true
 
-  playwright@1.56.0:
-    resolution: {integrity: sha512-X5Q1b8lOdWIE4KAoHpW3SE8HvUB+ZZsUoN64ZhjnN8dOb1UpujxBtENGiZFE+9F/yhzJwYa+ca3u43FeLbboHA==}
+  playwright@1.56.1:
+    resolution: {integrity: sha512-aFi5B0WovBHTEvpM3DzXTUaeN6eN0qWnTkKx4NQaH4Wvcmc153PdaY2UBdSYKaGYw+UyWXSVyxDUg5DoPEttjw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1616,18 +1616,18 @@ snapshots:
       '@eslint/core': 0.16.0
       levn: 0.4.1
 
-  '@hono/node-server@1.19.5(hono@4.9.12)':
+  '@hono/node-server@1.19.5(hono@4.10.0)':
     dependencies:
-      hono: 4.9.12
+      hono: 4.10.0
 
-  '@hono/vite-build@1.7.0(hono@4.9.12)':
+  '@hono/vite-build@1.7.0(hono@4.10.0)':
     dependencies:
-      hono: 4.9.12
+      hono: 4.10.0
 
-  '@hono/vite-dev-server@0.23.0(hono@4.9.12)(miniflare@4.20251008.0)(wrangler@4.43.0)':
+  '@hono/vite-dev-server@0.23.0(hono@4.10.0)(miniflare@4.20251008.0)(wrangler@4.43.0)':
     dependencies:
-      '@hono/node-server': 1.19.5(hono@4.9.12)
-      hono: 4.9.12
+      '@hono/node-server': 1.19.5(hono@4.10.0)
+      hono: 4.10.0
       minimatch: 9.0.5
     optionalDependencies:
       miniflare: 4.20251008.0
@@ -1751,9 +1751,9 @@ snapshots:
 
   '@oxc-project/types@0.94.0': {}
 
-  '@playwright/test@1.56.0':
+  '@playwright/test@1.56.1':
     dependencies:
-      playwright: 1.56.0
+      playwright: 1.56.1
 
   '@poppinss/colors@4.1.5':
     dependencies:
@@ -1881,7 +1881,7 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
-  '@types/node@24.8.0':
+  '@types/node@24.8.1':
     dependencies:
       undici-types: 7.14.0
 
@@ -2236,7 +2236,7 @@ snapshots:
 
   has-flag@4.0.0: {}
 
-  hono@4.9.12: {}
+  hono@4.10.0: {}
 
   ignore@5.3.2: {}
 
@@ -2415,11 +2415,11 @@ snapshots:
 
   picomatch@4.0.3: {}
 
-  playwright-core@1.56.0: {}
+  playwright-core@1.56.1: {}
 
-  playwright@1.56.0:
+  playwright@1.56.1:
     dependencies:
-      playwright-core: 1.56.0
+      playwright-core: 1.56.1
     optionalDependencies:
       fsevents: 2.3.2
 
@@ -2439,7 +2439,7 @@ snapshots:
 
   reusify@1.1.0: {}
 
-  rolldown-vite@7.1.16(@types/node@24.8.0)(esbuild@0.25.4):
+  rolldown-vite@7.1.16(@types/node@24.8.1)(esbuild@0.25.4):
     dependencies:
       '@oxc-project/runtime': 0.92.0
       fdir: 6.5.0(picomatch@4.0.3)
@@ -2449,7 +2449,7 @@ snapshots:
       rolldown: 1.0.0-beta.42
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 24.8.0
+      '@types/node': 24.8.1
       esbuild: 0.25.4
       fsevents: 2.3.3
 
