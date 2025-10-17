@@ -1,6 +1,6 @@
 import type { Remix } from "@remix-run/dom";
 import { App } from "./components/App";
-import { SSRProvider, type SSRProps } from "./SSRProvider";
+import { SSRProvider, type SSRProps } from "./provider/SSRProvider";
 
 export function Layout(this: Remix.Handle) {
   return ({ storage }: { storage: SSRProps }) => (

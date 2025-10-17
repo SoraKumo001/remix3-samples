@@ -1,6 +1,6 @@
 import { type Remix } from "@remix-run/dom";
-import { SSRFetch, useSSR } from "../SSRProvider";
-import { Link } from "../RouterProvider";
+import { SSRFetch, useSSR } from "../provider/SSRProvider";
+import { Link } from "../provider/RouterProvider";
 
 interface Center {
   name: string;

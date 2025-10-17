@@ -1,10 +1,11 @@
 import { Frame, type Remix } from "@remix-run/dom";
 
 const isServer = typeof window === "undefined";
+const SSR_DATA_NAME = "__REMIX3_SSR__";
 
 type SSRState<T = unknown> = {
   state: "idle" | "loading" | "finished";
-  value: T;
+  value?: T;
   children: Remix.RemixNode;
   promise: Promise<T>;
 };
@@ -28,7 +29,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
         }
       );
     } else {
-      const node = document.getElementById("__REMIX3_SSR__");
+      const node = document.getElementById(SSR_DATA_NAME);
       const states = JSON.parse(node?.innerText ?? "{}");
       this.context.set(
         storage ?? {
@@ -68,48 +69,49 @@ export function SSRData(this: Remix.Handle<unknown>) {
   };
 }
 
-export function SSRFetch(this: Remix.Handle) {
-  const context = this.context.get(SSRProvider);
-  return ({
+export function SSRFetch<T>(
+  this: Remix.Handle,
+  {
     name,
     action,
     children,
   }: {
     name: string;
-    action: () => Promise<void>;
+    action: () => Promise<T>;
     children: Remix.RemixNode;
-  }) => {
-    if (isServer) {
-      if (!context.states[name]) {
-        const state: SSRState = {
-          promise: action(),
-          state: "loading",
-          value: undefined,
-          children,
-        };
-        context.states[name] = state;
-      }
-      return <Frame src={name} />;
-    } else {
-      if (!context.states[name]) {
-        const promise = action();
-        const state: SSRState = {
-          promise,
-          state: "loading",
-          value: undefined,
-          children,
-        };
-        context.states[name] = state;
-        promise.then((v) => {
-          context.states[name].state = "finished";
-          context.states[name].value = v;
-          this.render();
-        });
-      }
-      const state = context.states[name];
-      return <SSRData value={state.value}>{children}</SSRData>;
+  }
+) {
+  const context = this.context.get(SSRProvider);
+  if (isServer) {
+    if (!context.states[name]) {
+      const state: SSRState<T> = {
+        promise: action(),
+        state: "loading",
+        value: undefined,
+        children,
+      };
+      context.states[name] = state;
     }
-  };
+    return <Frame src={name} />;
+  } else {
+    if (!context.states[name]) {
+      const promise = action();
+      const state: SSRState = {
+        promise,
+        state: "loading",
+        value: undefined,
+        children,
+      };
+      context.states[name] = state;
+      promise.then((v) => {
+        context.states[name].state = "finished";
+        context.states[name].value = v;
+        this.render();
+      });
+    }
+    const state = context.states[name];
+    return <SSRData value={state.value}>{children}</SSRData>;
+  }
 }
 
 export const useSSR = <T,>(inst: Remix.Handle) => {
@@ -131,7 +133,7 @@ export const resolveFrame = async (
       values[key] = await p.promise;
     }
     return (
-      <script type="application/json" id="__REMIX3_SSR__">
+      <script type="application/json" id={SSR_DATA_NAME}>
         {JSON.stringify(values)}
       </script>
     );

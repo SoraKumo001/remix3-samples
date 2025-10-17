@@ -1,6 +1,6 @@
 import { type Remix } from "@remix-run/dom";
 import { AreaList } from "./AreaList";
-import { useLocation } from "../RouterProvider";
+import { useLocation } from "../provider/RouterProvider";
 import { Weather } from "./Weather";
 
 export function App(this: Remix.Handle) {

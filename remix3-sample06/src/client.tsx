@@ -1,7 +1,7 @@
 import { createRoot } from "@remix-run/dom";
 import { App } from "./components/App";
-import { SSRProvider } from "./SSRProvider";
-import { RouterProvider } from "./RouterProvider";
+import { SSRProvider } from "./provider/SSRProvider";
+import { RouterProvider } from "./provider/RouterProvider";
 if (document.body) {
   createRoot(document.body).render(
     <RouterProvider url={location.toString()}>

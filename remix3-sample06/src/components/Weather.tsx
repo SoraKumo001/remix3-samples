@@ -1,6 +1,6 @@
 import { type Remix } from "@remix-run/dom";
-import { SSRFetch, useSSR } from "../SSRProvider";
-import { Link } from "../RouterProvider";
+import { SSRFetch, useSSR } from "../provider/SSRProvider";
+import { Link } from "../provider/RouterProvider";
 
 interface Weather {
   publishingOffice: string;
@@ -10,8 +10,8 @@ interface Weather {
   text: string;
 }
 
-export function Weather(this: Remix.Handle) {
-  return ({ id }: { id: string }) => (
+export function Weather(this: Remix.Handle, { id }: { id: string }) {
+  return (
     <SSRFetch
       name={`weather-${id}`}
       action={() =>
@@ -26,22 +26,20 @@ export function Weather(this: Remix.Handle) {
 }
 
 function WeatherItem(this: Remix.Handle) {
-  return () => {
-    const value = useSSR<Weather>(this);
-    return (
+  const value = useSSR<Weather>(this);
+  return (
+    <div>
       <div>
-        <div>
-          <Link to="/">戻る</Link>
-        </div>
-        {value && (
-          <>
-            <h1>{value.targetArea}</h1>
-            <div>{new Date(value.reportDatetime).toLocaleString()}</div>
-            <div>{value.headlineText}</div>
-            <pre>{value.text}</pre>
-          </>
-        )}
+        <Link to="/">戻る</Link>
       </div>
-    );
-  };
+      {value && (
+        <>
+          <h1>{value.targetArea}</h1>
+          <div>{new Date(value.reportDatetime).toLocaleString()}</div>
+          <div>{value.headlineText}</div>
+          <pre>{value.text}</pre>
+        </>
+      )}
+    </div>
+  );
 }
