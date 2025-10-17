@@ -1,3 +1,3 @@
-# remix3-sample05
+# remix3-sample06
 
-https://remix3-sample05.mofon001.workers.dev/
+https://remix3-sample06.mofon001.workers.dev/
