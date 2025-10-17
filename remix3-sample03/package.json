@@ -1,0 +1,28 @@
+{
+  "name": "remix3-sample01",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "tsx watch ./src/server.tsx",
+    "watch": "rolldown --watch -c",
+    "build": "rolldown -c",
+    "start": "node dist",
+    "predeploy": "pnpm run build"
+  },
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "1.19.5",
+    "@remix-run/dom": "0.0.0-experimental-remix-jam.1",
+    "@remix-run/events": "0.0.0-experimental-remix-jam.1",
+    "hono": "4.9.12"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0",
+    "@types/node": "24.7.2",
+    "rolldown": "1.0.0-beta.43",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  },
+  "repository": "https://github.com/SoraKumo001/remix3-sample01",
+  "author": "SoraKumo <info@croud.jp>",
+  "license": "MIT"
+}
