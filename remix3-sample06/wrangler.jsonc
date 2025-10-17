@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "remix3-sample05",
+  "compatibility_date": "2025-09-14",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./src/server.tsx",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  }
+}
