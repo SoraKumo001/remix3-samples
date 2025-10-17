@@ -1,4 +1,4 @@
-# Sample of Remix3
+# Remix3 Samples
 
 - Simple spa sample  
   [remix3-sample01](./remix3-sample01)
