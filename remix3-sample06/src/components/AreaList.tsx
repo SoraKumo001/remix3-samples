@@ -22,7 +22,7 @@ interface Area {
 }
 
 export function AreaList(this: Remix.Handle) {
-  return () => (
+  return (
     <SSRFetch
       name="area-list"
       action={() =>
@@ -37,15 +37,16 @@ export function AreaList(this: Remix.Handle) {
 }
 
 function List(this: Remix.Handle) {
-  return () => {
-    const value = useSSR<Area>(this);
-    return (
-      value &&
-      Object.entries(value.offices).map(([code, { name }]) => (
-        <div key={code}>
-          <Link to={`/weather/${code}`}>{name}</Link>
-        </div>
-      ))
-    );
-  };
+  const { value, state } = useSSR<Area>(this);
+  return (
+    <>
+      {state === "loading" && <div>Loading...</div>}
+      {value &&
+        Object.entries(value.offices).map(([code, { name }]) => (
+          <div key={code}>
+            <Link href={`/weather/${code}`}>{name}</Link>
+          </div>
+        ))}
+    </>
+  );
 }

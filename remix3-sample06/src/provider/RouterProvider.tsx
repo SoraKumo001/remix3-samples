@@ -5,12 +5,12 @@ const isServer = typeof window === "undefined";
 
 export function RouterProvider(
   this: Remix.Handle<{
-    url: string;
+    serverUrl: string;
     navigate: (url: string) => void;
   }>
 ) {
   const context = {
-    url: "",
+    serverUrl: "",
     navigate: (url: string) => {
       history.pushState({}, "", url);
       this.render();
@@ -24,15 +24,17 @@ export function RouterProvider(
   if (!isServer) {
     addEventListener("popstate", handlePopState);
   }
-  return ({ url, children }: { url: string; children: Remix.RemixNode }) => {
-    context.url = url;
+  return ({ url, children }: { url?: string; children: Remix.RemixNode }) => {
+    if (isServer && url) {
+      context.serverUrl = url;
+    }
     return <>{children}</>;
   };
 }
 
 export const useLocation = (inst: Remix.Handle) => {
   if (isServer) {
-    const url = new URL(inst.context.get(RouterProvider).url);
+    const url = new URL(inst.context.get(RouterProvider).serverUrl);
     return url.pathname;
   }
   return location.pathname;
@@ -44,16 +46,18 @@ export const useNavigate = (inst: Remix.Handle) => {
 
 export function Link(this: Remix.Handle) {
   const navigate = useNavigate(this);
-  return ({ to, children }: { to: string; children: Remix.RemixNode }) => {
+  return (props: Remix.Props<"a">) => {
     return (
       <a
-        href={to}
+        {...props}
         on={dom.click((e) => {
           e.preventDefault();
-          navigate(to);
+          if (props.href) {
+            navigate(props.href);
+          }
         })}
       >
-        {children}
+        {props.children}
       </a>
     );
   };

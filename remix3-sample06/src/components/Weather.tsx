@@ -26,12 +26,13 @@ export function Weather(this: Remix.Handle, { id }: { id: string }) {
 }
 
 function WeatherItem(this: Remix.Handle) {
-  const value = useSSR<Weather>(this);
+  const { value ,state} = useSSR<Weather>(this);
   return (
     <div>
       <div>
-        <Link to="/">戻る</Link>
+        <Link href="/">戻る</Link>
       </div>
+      {state==="loading" && <div>Loading...</div>}
       {value && (
         <>
           <h1>{value.targetArea}</h1>
