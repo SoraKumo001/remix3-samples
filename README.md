@@ -14,3 +14,6 @@
 
 - Weather Forecast(SSR + Routing)  
   [remix3-sample05](./remix3-sample05)
+
+- Weather Forecast(Cloudflare)  
+  [remix3-sample06](./remix3-sample06)
