@@ -1,10 +1,9 @@
 import type { Remix } from "@remix-run/dom";
 import { App } from "./components/App";
-import { SSRProvider, type SSRProps } from "./provider/SSRProvider";
 import css from "./index.css?inline";
 
 export function Layout(this: Remix.Handle) {
-  return ({ storage }: { storage: SSRProps }) => (
+  return (
     <html lang="ja">
       <head>
         <meta charSet="UTF-8" />
@@ -21,9 +20,7 @@ export function Layout(this: Remix.Handle) {
         <title>Remix3 Test</title>
       </head>
       <body>
-        <SSRProvider storage={storage}>
-          <App />
-        </SSRProvider>
+        <App />
       </body>
     </html>
   );

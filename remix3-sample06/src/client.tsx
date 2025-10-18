@@ -3,23 +3,21 @@ import { App } from "./components/App";
 import { SSRProvider } from "./provider/SSRProvider";
 import { RouterProvider } from "./provider/RouterProvider";
 
+const Render = (
+  <RouterProvider>
+    <SSRProvider>
+      <App />
+    </SSRProvider>
+  </RouterProvider>
+);
+
 if (document.body) {
-  createRoot(document.body).render(
-    <RouterProvider url={location.toString()}>
-      <SSRProvider>
-        <App />
-      </SSRProvider>
-    </RouterProvider>
-  );
+  createRoot(document.body).render(Render);
 } else {
   window.addEventListener(
     "DOMContentLoaded",
     () => {
-      createRoot(document.body).render(
-        <SSRProvider>
-          <App />
-        </SSRProvider>
-      );
+      createRoot(document.body).render(Render);
     },
     { once: true }
   );

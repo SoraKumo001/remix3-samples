@@ -1,6 +1,10 @@
 import { renderToStream } from "@remix-run/dom/server";
 import { Layout } from "./root";
-import { resolveFrame, type SSRProps } from "./provider/SSRProvider";
+import {
+  resolveFrame,
+  SSRProvider,
+  type SSRProps,
+} from "./provider/SSRProvider";
 import { RouterProvider } from "./provider/RouterProvider";
 
 const handler = (url: string) => {
@@ -8,7 +12,9 @@ const handler = (url: string) => {
   return new Response(
     renderToStream(
       <RouterProvider url={url}>
-        <Layout storage={storage} />
+        <SSRProvider storage={storage}>
+          <Layout />
+        </SSRProvider>
       </RouterProvider>,
       {
         resolveFrame: (src) => resolveFrame(src, storage.states),

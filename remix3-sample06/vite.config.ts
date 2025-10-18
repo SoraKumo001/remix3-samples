@@ -26,10 +26,7 @@ export default defineConfig({
     },
     tailwindcss(),
   ],
-  base: "./assets",
   resolve: {
-    externalConditions: ["workerd"],
-
     alias: {
       "../dist/index.js": "./src/server.tsx",
       "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
