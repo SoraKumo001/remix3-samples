@@ -39,7 +39,7 @@ export function AreaList(this: Remix.Handle) {
 function List(this: Remix.Handle) {
   const { value, state } = useSSR<Area>(this);
   return (
-    <>
+    <div className="p-2">
       {state === "loading" && <div>Loading...</div>}
       {value &&
         Object.entries(value.offices).map(([code, { name }]) => (
@@ -47,6 +47,6 @@ function List(this: Remix.Handle) {
             <Link href={`/weather/${code}`}>{name}</Link>
           </div>
         ))}
-    </>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 import type { Remix } from "@remix-run/dom";
 import { App } from "./components/App";
 import { SSRProvider, type SSRProps } from "./provider/SSRProvider";
+import css from "./index.css?inline";
 
 export function Layout(this: Remix.Handle) {
   return ({ storage }: { storage: SSRProps }) => (
@@ -8,6 +9,7 @@ export function Layout(this: Remix.Handle) {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <style type="text/css">{css}</style>
         <script
           type="module"
           src={

@@ -4,7 +4,7 @@ export default [
   defineConfig({
     input: { bundle: "./src/client.tsx" },
     output: {
-      dir: "public",
+      dir: "./dist/assets",
       entryFileNames: "[name].js",
     },
     resolve: {

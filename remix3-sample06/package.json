@@ -5,20 +5,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "rolldown -c",
+    "build": "vite build && rolldown -c",
     "start": "pnpm run build && wrangler dev --tsconfig=tsconfig.app.json",
     "deploy": "pnpm run build && wrangler deploy --tsconfig=tsconfig.app.json",
     "lint": "eslint ."
   },
   "dependencies": {
-    "@hono/vite-dev-server": "0.23.0",
     "@remix-run/dom": "0.0.0-experimental-remix-jam.1",
     "@remix-run/events": "0.0.0-experimental-remix-jam.1",
     "hono": "4.10.0"
   },
   "devDependencies": {
+    "@hono/vite-dev-server": "0.23.0",
+    "@tailwindcss/vite": "4.1.14",
     "@eslint/js": "^9.37.0",
-    "@hono/node-server": "1.19.5",
     "@hono/vite-build": "1.7.0",
     "@playwright/test": "1.56.1",
     "@types/node": "^24.8.1",
@@ -26,6 +26,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.4.0",
     "rolldown": "1.0.0-beta.43",
+    "tailwindcss": "4.1.14",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.1",
     "vite": "npm:rolldown-vite@latest",

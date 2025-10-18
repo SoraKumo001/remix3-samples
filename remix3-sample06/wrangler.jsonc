@@ -3,9 +3,9 @@
   "name": "remix3-sample06",
   "compatibility_date": "2025-09-14",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "./src/server.tsx",
+  "main": "./worker/app.ts",
   "assets": {
-    "directory": "./public",
+    "directory": "./dist/assets",
     "binding": "ASSETS"
   }
 }

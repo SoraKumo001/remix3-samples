@@ -26,20 +26,20 @@ export function Weather(this: Remix.Handle, { id }: { id: string }) {
 }
 
 function WeatherItem(this: Remix.Handle) {
-  const { value ,state} = useSSR<Weather>(this);
+  const { value, state } = useSSR<Weather>(this);
   return (
-    <div>
+    <div className="p-2">
       <div>
         <Link href="/">戻る</Link>
       </div>
-      {state==="loading" && <div>Loading...</div>}
+      {state === "loading" && <div>Loading...</div>}
       {value && (
-        <>
-          <h1>{value.targetArea}</h1>
+        <div className="max-w-4xl">
+          <h1 className="text-2xl font-bold">{value.targetArea}</h1>
           <div>{new Date(value.reportDatetime).toLocaleString()}</div>
           <div>{value.headlineText}</div>
-          <pre>{value.text}</pre>
-        </>
+          <pre className="whitespace-pre-wrap">{value.text}</pre>
+        </div>
       )}
     </div>
   );
