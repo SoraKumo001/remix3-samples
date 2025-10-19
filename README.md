@@ -17,3 +17,6 @@
 
 - Weather Forecast(SSR + Routing + Tailwind + Cloudflare)  
   [remix3-sample06](./remix3-sample06)
+
+- Image Optimize(Tailwind + Cloudflare)  
+  [remix3-sample07](./remix3-sample07)
