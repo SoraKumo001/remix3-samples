@@ -53,7 +53,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
     return (
       <>
         {children}
-        {isServer && <Frame src="ssr-data" />}
+        {isServer && <Frame src="ssr-data:" />}
       </>
     );
   };
@@ -87,7 +87,8 @@ export function SSRFetch<T>(
   }
 ) {
   const context = this.context.get(SSRProvider);
-  if (!context.states[name]) {
+  const frameName = `ssr:${name}`;
+  if (!context.states[frameName]) {
     const promise = action();
     const state: SSRState<T> = {
       promise,
@@ -95,17 +96,17 @@ export function SSRFetch<T>(
       value: undefined,
       children,
     };
-    context.states[name] = state;
+    context.states[frameName] = state;
     promise.then((v) => {
-      context.states[name].state = "finished";
-      context.states[name].value = v;
+      context.states[frameName].state = "finished";
+      context.states[frameName].value = v;
       if (!isServer) this.render();
     });
   }
   if (isServer) {
-    return <Frame src={name} />;
+    return <Frame src={frameName} />;
   } else {
-    const state = context.states[name];
+    const state = context.states[frameName];
     return (
       <SSRData value={state.value} state={state.state}>
         {children}
@@ -122,7 +123,7 @@ export const resolveFrame = async (
   src: string,
   states: Record<string, SSRState>
 ) => {
-  if (src === "ssr-data") {
+  if (src === "ssr-data:") {
     let length = 0;
     while (length !== Object.values(states).length) {
       await Promise.all(Object.values(states).map((v) => v.promise));

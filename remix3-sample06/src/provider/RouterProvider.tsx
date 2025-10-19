@@ -8,6 +8,7 @@ export function RouterProvider(
   this: Remix.Handle<{
     serverUrl: string;
     navigate: (url: string) => void;
+    params?: RouteMatch<string>;
   }>
 ) {
   const context = {
@@ -53,6 +54,14 @@ export const useNavigate = (inst: Remix.Handle) => {
   return inst.context.get(RouterProvider).navigate;
 };
 
+export const useParams = <T extends Record<string, unknown>>(
+  inst: Remix.Handle
+) => {
+  const p = inst.context.get(RouterProvider).params;
+  if (!p) throw "error params";
+  return p.params as T;
+};
+
 export function Link(this: Remix.Handle) {
   const navigate = useNavigate(this);
   return (props: Remix.Props<"a">) => {
@@ -72,10 +81,7 @@ export function Link(this: Remix.Handle) {
   };
 }
 
-export type RouteType = Record<
-  string,
-  (p: RouteMatch<string>) => Remix.RemixNode
->;
+export type RouteType = Record<string, () => Promise<Remix.RemixNode>>;
 
 export const useRouter = (inst: Remix.Handle, route: RouteType) => {
   const location = useFullLocation(inst);
@@ -84,7 +90,8 @@ export const useRouter = (inst: Remix.Handle, route: RouteType) => {
     const p = new RoutePattern(pattern);
     const match = p.match(location);
     if (match) {
-      return content(match);
+      inst.context.get(RouterProvider).params = match;
+      return content();
     }
   }
   return null;

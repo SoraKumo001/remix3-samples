@@ -1,6 +1,6 @@
 import { type Remix } from "@remix-run/dom";
 import { SSRFetch, useSSR } from "../provider/SSRProvider";
-import { Link } from "../provider/RouterProvider";
+import { Link, useParams } from "../provider/RouterProvider";
 
 interface Weather {
   publishingOffice: string;
@@ -10,7 +10,8 @@ interface Weather {
   text: string;
 }
 
-export function Weather(this: Remix.Handle, { id }: { id: string }) {
+export default function (this: Remix.Handle) {
+  const { id } = useParams(this);
   return (
     <SSRFetch
       name={`weather-${id}`}

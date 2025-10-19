@@ -21,7 +21,7 @@ interface Area {
   class20s: Centers;
 }
 
-export function AreaList(this: Remix.Handle) {
+export default function (this: Remix.Handle) {
   return (
     <SSRFetch
       name="area-list"
