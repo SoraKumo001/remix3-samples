@@ -1,5 +1,5 @@
 import type { Remix } from "@remix-run/dom";
-import { App } from "./components/App";
+import { App } from "./App";
 import css from "./index.css?inline";
 
 export function Layout(this: Remix.Handle) {

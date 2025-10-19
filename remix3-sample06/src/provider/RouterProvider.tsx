@@ -1,5 +1,6 @@
 import { type Remix } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
+import { RoutePattern, type RouteMatch } from "@remix-run/route-pattern";
 
 const isServer = typeof window === "undefined";
 
@@ -40,6 +41,14 @@ export const useLocation = (inst: Remix.Handle) => {
   return location.pathname;
 };
 
+export const useFullLocation = (inst: Remix.Handle) => {
+  if (isServer) {
+    const url = new URL(inst.context.get(RouterProvider).serverUrl);
+    return url.href;
+  }
+  return location.href;
+};
+
 export const useNavigate = (inst: Remix.Handle) => {
   return inst.context.get(RouterProvider).navigate;
 };
@@ -62,3 +71,21 @@ export function Link(this: Remix.Handle) {
     );
   };
 }
+
+export type RouteType = Record<
+  string,
+  (p: RouteMatch<string>) => Remix.RemixNode
+>;
+
+export const useRouter = (inst: Remix.Handle, route: RouteType) => {
+  const location = useFullLocation(inst);
+
+  for (const [pattern, content] of Object.entries(route)) {
+    const p = new RoutePattern(pattern);
+    const match = p.match(location);
+    if (match) {
+      return content(match);
+    }
+  }
+  return null;
+};

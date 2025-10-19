@@ -1,5 +1,5 @@
 import { createRoot } from "@remix-run/dom";
-import { App } from "./components/App";
+import { App } from "./App";
 import { SSRProvider } from "./provider/SSRProvider";
 import { RouterProvider } from "./provider/RouterProvider";
 

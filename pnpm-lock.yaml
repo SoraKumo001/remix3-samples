@@ -216,6 +216,12 @@ importers:
       '@remix-run/events':
         specifier: 0.0.0-experimental-remix-jam.1
         version: 0.0.0-experimental-remix-jam.1
+      '@remix-run/fetch-router':
+        specifier: 0.6.0
+        version: 0.6.0
+      '@remix-run/route-pattern':
+        specifier: 0.14.0
+        version: 0.14.0
       hono:
         specifier: 4.10.0
         version: 4.10.0
@@ -883,6 +889,21 @@ packages:
 
   '@remix-run/events@0.0.0-experimental-remix-jam.1':
     resolution: {integrity: sha512-4Xs0Ek3QYsx2Tq64ZkSMXN9gAwBOg42vzK/5aTkACktb6asljm/wf8mgFPtf+IUegh4BBzkapNXAdmXEh4UqNg==}
+
+  '@remix-run/fetch-router@0.6.0':
+    resolution: {integrity: sha512-N5AMK2XxTFO3d8AMRWphFoRos4NjvfZpQeZW859Ade+FgP1yYRZhEYep2T3FVPBUJWPqrG7c9lIxVLcVcZUBSQ==}
+
+  '@remix-run/form-data-parser@0.11.0':
+    resolution: {integrity: sha512-vD1xko5NntvKKzCOM6hAmCfUOPguIWJJ3WqcBFMqqUYlk3Z4j9t4CpvL0taq9gaB8kMtYN78lD4r8Nb8xXI4zw==}
+
+  '@remix-run/headers@0.12.0':
+    resolution: {integrity: sha512-eqVSL5UOIyqVx0NTqgtNKMKVokE9jPchkZHl/N13KKPQYw/leS8VCoX5zRhkB1UvcLyfj113LX0OvEcuNbc5Hg==}
+
+  '@remix-run/multipart-parser@0.11.0':
+    resolution: {integrity: sha512-AE/H+ok0fWOZb84sJ8vREOJiSwYoEoGL0rpHZSAiPmCkBKbnsmHCbiUtg5+wELem4Q0HAEY6vjVK83u9cIlAhw==}
+
+  '@remix-run/route-pattern@0.14.0':
+    resolution: {integrity: sha512-Wlq1LAsGZBJ5uEnUmxJDBQvpLKhay1mVvxmNl0oeKBOin6yWDB5YkJkSMAlYQi7mM/vVIDlqr183MiHi4SO7AA==}
 
   '@remix-run/style@0.0.0-experimental-remix-jam.1':
     resolution: {integrity: sha512-aRETYid6C1V1smXnhbxoFdsOi+qxvXM9NZ9UIQeRQ9ZEWT2TS1dtyeNTv6QXO1Swp9QtdWlnPb6RlzUBvG5h4Q==}
@@ -2516,6 +2537,23 @@ snapshots:
       '@remix-run/style': 0.0.0-experimental-remix-jam.1
 
   '@remix-run/events@0.0.0-experimental-remix-jam.1': {}
+
+  '@remix-run/fetch-router@0.6.0':
+    dependencies:
+      '@remix-run/form-data-parser': 0.11.0
+      '@remix-run/route-pattern': 0.14.0
+
+  '@remix-run/form-data-parser@0.11.0':
+    dependencies:
+      '@remix-run/multipart-parser': 0.11.0
+
+  '@remix-run/headers@0.12.0': {}
+
+  '@remix-run/multipart-parser@0.11.0':
+    dependencies:
+      '@remix-run/headers': 0.12.0
+
+  '@remix-run/route-pattern@0.14.0': {}
 
   '@remix-run/style@0.0.0-experimental-remix-jam.1': {}
 
