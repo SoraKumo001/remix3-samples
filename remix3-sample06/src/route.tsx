@@ -1,5 +1,5 @@
-import Index from "./pages/index";
-import Weather from "./pages/weather";
+import Index from "./routes/index";
+import Weather from "./routes/weather.$id";
 import type { RouteType } from "./provider/RouterProvider";
 
 export const route: RouteType = {
