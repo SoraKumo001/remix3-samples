@@ -14,7 +14,7 @@ export function Layout(this: Remix.Handle) {
           src={
             /\.(tsx|ts)$/.test(import.meta.url)
               ? "/src/client.tsx"
-              : "/bundle.js"
+              : "/client.js"
           }
         />
         <title>Remix3 Test</title>

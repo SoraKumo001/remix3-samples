@@ -81,7 +81,7 @@ export function Link(this: Remix.Handle) {
   };
 }
 
-export type RouteType = Record<string, () => Remix.RemixNode>;
+export type RouteType = Record<string, Remix.Component>;
 
 export const useRouter = (inst: Remix.Handle, route: RouteType) => {
   const location = useFullLocation(inst);
@@ -91,8 +91,8 @@ export const useRouter = (inst: Remix.Handle, route: RouteType) => {
     const match = p.match(location);
     if (match) {
       inst.context.get(RouterProvider).params = match;
-      return content();
+      return content;
     }
   }
-  return null;
+  return <></>;
 };

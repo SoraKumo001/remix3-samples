@@ -1,7 +1,8 @@
 import { type Remix } from "@remix-run/dom";
 import { useRouter } from "./provider/RouterProvider";
-import { route } from "./route";
+import { route } from "virtual:routes";
 
 export function App(this: Remix.Handle) {
-  return useRouter(this, route);
+  const Outlet = useRouter(this, route);
+  return <Outlet />;
 }

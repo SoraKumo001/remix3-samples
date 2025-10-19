@@ -87,6 +87,7 @@ export function SSRFetch<T>(
   }
 ) {
   const context = this.context.get(SSRProvider);
+  if (!context) return undefined;
   const frameName = `ssr:${name}`;
   if (!context.states[frameName]) {
     const promise = action();

@@ -244,15 +244,9 @@ importers:
       eslint:
         specifier: ^9.37.0
         version: 9.38.0(jiti@2.6.1)
-      eslint-plugin-react-refresh:
-        specifier: ^0.4.24
-        version: 0.4.24(eslint@9.38.0(jiti@2.6.1))
       globals:
         specifier: ^16.4.0
         version: 16.4.0
-      rolldown:
-        specifier: 1.0.0-beta.43
-        version: 1.0.0-beta.43
       tailwindcss:
         specifier: 4.1.14
         version: 4.1.14
