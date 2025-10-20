@@ -1,6 +1,6 @@
-import { mergeConfig, type Plugin } from "vite";
 import * as fs from "fs";
 import * as path from "path";
+import { mergeConfig, type Plugin } from "vite";
 
 const VIRTUAL_MODULE_ID = "virtual:routes";
 const RESOLVED_VIRTUAL_MODULE_ID = "\0" + VIRTUAL_MODULE_ID;
@@ -36,15 +36,15 @@ export function remixRoutes(options?: { dir?: string }): Plugin {
         }
 
         const routeFiles = fs.readdirSync(routesDir);
-        let imports = "";
-        let routeDefinitions = "";
+        const imports: string[] = [];
+        const routeDefinitions: string[] = [];
         const routeMap: { [key: string]: string } = {};
 
         routeFiles.forEach((file, index) => {
           const fileName = path.parse(file).name;
           const importPath = `@/routes/${fileName}`;
 
-          imports += `import route${index} from "${importPath}";\n`;
+          imports.push(`import route${index} from "${importPath}";`);
 
           let routePath = fileName
             .replace(/\.(tsx|ts)$/, "")
@@ -64,16 +64,14 @@ export function remixRoutes(options?: { dir?: string }): Plugin {
           routeMap[routePath] = `route${index}`;
         });
 
-        routeDefinitions = Object.entries(routeMap)
-          .map(
-            ([routePath, componentName]) => `  "${routePath}": ${componentName}`
-          )
-          .join(",\n");
+        Object.entries(routeMap).forEach(([routePath, componentName]) =>
+          routeDefinitions.push(`  "${routePath}": ${componentName}`)
+        );
 
         return `
-${imports}
+${imports.join("\n")}
 export const route = {
-${routeDefinitions}
+${routeDefinitions.join(",\n")}
 };`;
       }
       return null;
