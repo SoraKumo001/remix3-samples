@@ -38,12 +38,21 @@ export function remixRoutes(): Plugin {
 
           imports += `import route${index} from "${importPath}";\n`;
 
-          let routePath = `/${fileName
-            .replace(/\.index$/, "")
-            .replace(/\.\$([^.]+)$/, "/:$1")}`;
-          if (routePath === "/index") {
-            routePath = "/";
+          let routePath = fileName
+            .replace(/\.(tsx|ts)$/, "")
+            .split(".")
+            .map((segment) => {
+              if (segment.startsWith("$")) {
+                return `:${segment.substring(1)}`;
+              }
+              return segment;
+            })
+            .join("/");
+
+          if (routePath === "index") {
+            routePath = "";
           }
+          routePath = `/${routePath}`;
           routeMap[routePath] = `route${index}`;
         });
 
