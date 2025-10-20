@@ -4,7 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
 export default defineConfig(({ isSsrBuild }) => {
   return {
-    
     build: {
       outDir: isSsrBuild ? "./dist" : "./dist/assets",
       ssr: isSsrBuild,
@@ -24,7 +23,10 @@ export default defineConfig(({ isSsrBuild }) => {
     plugins: [
       devServer({
         entry: "worker/app.ts",
-        exclude: [...defaultOptions.exclude, /\.(ts|tsx|webp|png|svg)(\?.*)?$/],
+        exclude: [
+          ...defaultOptions.exclude,
+          /\.(ts|tsx|webp|png|svg|css)(\?.*)?$/,
+        ],
       }),
       {
         name: "reload",
