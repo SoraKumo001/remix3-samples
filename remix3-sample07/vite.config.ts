@@ -10,11 +10,11 @@ export default defineConfig(({ isSsrBuild }) => {
     build: {
       outDir: isSsrBuild ? "./dist" : "./dist/assets",
       ssr: isSsrBuild,
-      rollupOptions: {
-        input: isSsrBuild ? "./src/server.tsx" : "./src/client.tsx",
+      rolldownOptions: {
+        input: isSsrBuild ? "./worker/app.ts" : "./src/client.tsx",
         output: {
           entryFileNames: (chunkInfo) => {
-            if (chunkInfo.name === "server") {
+            if (chunkInfo.name === "app") {
               return "index.js";
             }
             return "[name].js";

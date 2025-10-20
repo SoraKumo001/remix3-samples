@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import handler from "../dist/index.js";
+import handler from "../src/server.tsx";
 
 const app = new Hono();
 app.get("*", async (c) => {
