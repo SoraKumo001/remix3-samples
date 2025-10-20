@@ -1,6 +1,7 @@
 import { type Remix } from "@remix-run/dom";
 import { dom } from "@remix-run/events";
 import { RoutePattern, type RouteMatch } from "@remix-run/route-pattern";
+import { route } from "virtual:routes";
 
 const isServer = typeof window === "undefined";
 
@@ -96,3 +97,8 @@ export const useRouter = (inst: Remix.Handle, route: RouteType) => {
   }
   return <></>;
 };
+
+export function Outlet(this: Remix.Handle) {
+  const Route = useRouter(this, route);
+  return <Route />;
+}

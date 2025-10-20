@@ -4,14 +4,15 @@ import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
 export default defineConfig(({ isSsrBuild }) => {
   return {
+    
     build: {
       outDir: isSsrBuild ? "./dist" : "./dist/assets",
       ssr: isSsrBuild,
-      rollupOptions: {
-        input: isSsrBuild ? "./src/server.tsx" : "./src/client.tsx",
+      rolldownOptions: {
+        input: isSsrBuild ? "./worker/app.ts" : "./src/client.tsx",
         output: {
           entryFileNames: (chunkInfo) => {
-            if (chunkInfo.name === "server") {
+            if (chunkInfo.name === "app") {
               return "index.js";
             }
             return "[name].js";
@@ -36,10 +37,5 @@ export default defineConfig(({ isSsrBuild }) => {
       tailwindcss(),
       remixRoutes(),
     ],
-    resolve: {
-      alias: {
-        "../dist/index.js": "./src/server.tsx",
-      },
-    },
   };
 });
