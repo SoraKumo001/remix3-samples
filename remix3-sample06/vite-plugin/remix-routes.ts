@@ -15,7 +15,7 @@ export function remixRoutes(options?: { dir?: string }): Plugin {
       return {
         resolve: {
           alias: {
-            "@": path.resolve(config.root || process.cwd(), "./src"),
+            "@": path.resolve(config.root || process.cwd(), dir),
           },
         },
       };
@@ -42,7 +42,7 @@ export function remixRoutes(options?: { dir?: string }): Plugin {
 
         routeFiles.forEach((file, index) => {
           const fileName = path.parse(file).name;
-          const importPath = `@/routes/${fileName}`;
+          const importPath = `@/${fileName}`;
 
           imports.push(`import route${index} from "${importPath}";`);
 
