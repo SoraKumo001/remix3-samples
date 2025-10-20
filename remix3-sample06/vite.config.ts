@@ -2,8 +2,6 @@ import { defineConfig, type ViteDevServer } from "vite";
 import devServer, { defaultOptions } from "@hono/vite-dev-server";
 import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
-import * as path from "path";
-
 export default defineConfig(({ isSsrBuild }) => {
   return {
     build: {
@@ -41,7 +39,6 @@ export default defineConfig(({ isSsrBuild }) => {
     resolve: {
       alias: {
         "../dist/index.js": "./src/server.tsx",
-        "@": path.resolve(__dirname, "./src"),
       },
     },
   };

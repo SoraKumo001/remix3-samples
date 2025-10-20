@@ -1,19 +1,27 @@
-import type { Plugin, ResolvedConfig } from "vite";
+import { mergeConfig, type Plugin } from "vite";
 import * as fs from "fs";
 import * as path from "path";
 
 const VIRTUAL_MODULE_ID = "virtual:routes";
 const RESOLVED_VIRTUAL_MODULE_ID = "\0" + VIRTUAL_MODULE_ID;
 
-export function remixRoutes(): Plugin {
-  let config: ResolvedConfig;
+export function remixRoutes(options?: { dir?: string }): Plugin {
+  const dir = options?.dir ?? "./src/routes";
   let routesDir: string;
 
   return {
     name: "vite-plugin-remix-routes",
+    config(config) {
+      return mergeConfig(config, {
+        resolve: {
+          alias: {
+            "@": path.resolve(config.root || process.cwd(), "./src"),
+          },
+        },
+      });
+    },
     configResolved(resolvedConfig) {
-      config = resolvedConfig;
-      routesDir = path.join(config.root, "src/routes");
+      routesDir = path.join(resolvedConfig.root, dir);
     },
     resolveId(id) {
       if (id === VIRTUAL_MODULE_ID) {
