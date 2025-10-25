@@ -13,12 +13,12 @@
     "@hono/node-server": "1.19.5",
     "@remix-run/dom": "0.0.0-experimental-remix-jam.1",
     "@remix-run/events": "0.0.0-experimental-remix-jam.1",
-    "hono": "4.9.12"
+    "hono": "4.10.3"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.0",
-    "@types/node": "24.7.2",
-    "rolldown": "1.0.0-beta.43",
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.9.1",
+    "rolldown": "1.0.0-beta.44",
     "tsx": "4.20.6",
     "typescript": "5.9.3"
   },

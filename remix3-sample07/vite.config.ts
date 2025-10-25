@@ -2,7 +2,6 @@ import { defineConfig, type ViteDevServer } from "vite";
 import devServer, { defaultOptions } from "@hono/vite-dev-server";
 import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
-import * as path from "path";
 import wasmImageOptimizationPlugin from "wasm-image-optimization/vite-plugin";
 
 export default defineConfig(({ isSsrBuild }) => {
@@ -26,7 +25,10 @@ export default defineConfig(({ isSsrBuild }) => {
     plugins: [
       devServer({
         entry: "worker/app.ts",
-        exclude: [...defaultOptions.exclude, /\.(ts|tsx|webp|png|svg)(\?.*)?$/],
+        exclude: [
+          ...defaultOptions.exclude,
+          /\.(ts|tsx|webp|png|svg|css)(\?.*)?$/,
+        ],
       }),
       {
         name: "reload",
@@ -38,13 +40,7 @@ export default defineConfig(({ isSsrBuild }) => {
       },
       tailwindcss(),
       remixRoutes(),
-      isSsrBuild ? undefined : wasmImageOptimizationPlugin(),
+      wasmImageOptimizationPlugin(),
     ],
-    resolve: {
-      alias: {
-        "../dist/index.js": "./src/server.tsx",
-        "@": path.resolve(__dirname, "./src"),
-      },
-    },
   };
 });

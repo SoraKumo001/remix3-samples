@@ -1,19 +1,27 @@
-import type { Plugin, ResolvedConfig } from "vite";
 import * as fs from "fs";
 import * as path from "path";
+import { type Plugin } from "vite";
 
 const VIRTUAL_MODULE_ID = "virtual:routes";
 const RESOLVED_VIRTUAL_MODULE_ID = "\0" + VIRTUAL_MODULE_ID;
 
-export function remixRoutes(): Plugin {
-  let config: ResolvedConfig;
+export function remixRoutes(options?: { dir?: string }): Plugin {
+  const dir = options?.dir ?? "./src/routes";
   let routesDir: string;
 
   return {
     name: "vite-plugin-remix-routes",
+    config(config) {
+      return {
+        resolve: {
+          alias: {
+            "@": path.resolve(config.root || process.cwd(), dir),
+          },
+        },
+      };
+    },
     configResolved(resolvedConfig) {
-      config = resolvedConfig;
-      routesDir = path.join(config.root, "src/routes");
+      routesDir = path.join(resolvedConfig.root, dir);
     },
     resolveId(id) {
       if (id === VIRTUAL_MODULE_ID) {
@@ -28,35 +36,42 @@ export function remixRoutes(): Plugin {
         }
 
         const routeFiles = fs.readdirSync(routesDir);
-        let imports = "";
-        let routeDefinitions = "";
+        const imports: string[] = [];
+        const routeDefinitions: string[] = [];
         const routeMap: { [key: string]: string } = {};
 
         routeFiles.forEach((file, index) => {
           const fileName = path.parse(file).name;
-          const importPath = `@/routes/${fileName}`;
+          const importPath = `@/${fileName}`;
 
-          imports += `import route${index} from "${importPath}";\n`;
+          imports.push(`import route${index} from "${importPath}";`);
 
-          let routePath = `/${fileName
-            .replace(/\.index$/, "")
-            .replace(/\.\$([^.]+)$/, "/:$1")}`;
-          if (routePath === "/index") {
-            routePath = "/";
+          let routePath = fileName
+            .replace(/\.(tsx|ts)$/, "")
+            .split(".")
+            .map((segment) => {
+              if (segment.startsWith("$")) {
+                return `:${segment.substring(1)}`;
+              }
+              return segment;
+            })
+            .join("/");
+
+          if (routePath === "index") {
+            routePath = "";
           }
+          routePath = `/${routePath}`;
           routeMap[routePath] = `route${index}`;
         });
 
-        routeDefinitions = Object.entries(routeMap)
-          .map(
-            ([routePath, componentName]) => `  "${routePath}": ${componentName}`
-          )
-          .join(",\n");
+        Object.entries(routeMap).forEach(([routePath, componentName]) =>
+          routeDefinitions.push(`  "${routePath}": ${componentName}`)
+        );
 
         return `
-${imports}
+${imports.join("\n")}
 export const route = {
-${routeDefinitions}
+${routeDefinitions.join(",\n")}
 };`;
       }
       return null;

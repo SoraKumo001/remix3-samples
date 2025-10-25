@@ -13,11 +13,11 @@
     "@remix-run/events": "0.0.0-experimental-remix-jam.1"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.0",
-    "@types/node": "24.7.2",
+    "@playwright/test": "1.56.1",
+    "@types/node": "24.9.1",
     "gh-pages": "6.3.0",
     "opener": "1.5.2",
-    "rolldown": "1.0.0-beta.43",
+    "rolldown": "1.0.0-beta.44",
     "typescript": "5.9.3"
   },
   "repository": "https://github.com/SoraKumo001/remix3-sample01",
