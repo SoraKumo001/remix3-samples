@@ -1,5 +1,6 @@
 import { type Remix } from "@remix-run/dom";
 import css from "./index.css?inline";
+import { App } from "./App";
 
 export function Layout(this: Remix.Handle) {
   return (
@@ -20,7 +21,7 @@ export function Layout(this: Remix.Handle) {
       </head>
       <body>
         {/* Due to a bug in Remix3, attempting to SSR causes hydration to fail. */}
-        {/* <App /> */}
+        <App />
       </body>
     </html>
   );
