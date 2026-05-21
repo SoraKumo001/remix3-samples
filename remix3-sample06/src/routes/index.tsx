@@ -1,4 +1,4 @@
-import { type Remix } from "@remix-run/dom";
+import { type Handle } from "remix/ui";
 import { SSRFetch, useSSR } from "../provider/SSRProvider";
 import { Link } from "../provider/RouterProvider";
 
@@ -21,8 +21,8 @@ interface Area {
   class20s: Centers;
 }
 
-export default function (this: Remix.Handle) {
-  return (
+export default function (handle: Handle) {
+  return () => (
     <SSRFetch
       name="area-list"
       action={() =>
@@ -36,17 +36,19 @@ export default function (this: Remix.Handle) {
   );
 }
 
-function List(this: Remix.Handle) {
-  const { value, state } = useSSR<Area>(this);
-  return (
-    <div className="p-2">
-      {state === "loading" && <div>Loading...</div>}
-      {value &&
-        Object.entries(value.offices).map(([code, { name }]) => (
-          <div key={code}>
-            <Link href={`/weather/${code}`}>{name}</Link>
-          </div>
-        ))}
-    </div>
-  );
+function List(handle: Handle) {
+  return () => {
+    const { value, state } = useSSR<Area>(handle);
+    return (
+      <div className="p-2">
+        {state === "loading" && <div>Loading...</div>}
+        {value &&
+          Object.entries(value.offices).map(([code, { name }]) => (
+            <div key={code}>
+              <Link to={`/weather/${code}`}>{name}</Link>
+            </div>
+          ))}
+      </div>
+    );
+  };
 }

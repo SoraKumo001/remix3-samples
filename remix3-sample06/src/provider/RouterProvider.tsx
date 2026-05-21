@@ -1,33 +1,37 @@
-import { type Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
+import { type Handle, on, type RemixNode } from "remix/ui";
 import { RoutePattern, type RouteMatch } from "@remix-run/route-pattern";
 import { route } from "virtual:routes";
 
 const isServer = typeof window === "undefined";
 
+interface RouterContext {
+  serverUrl: string;
+  navigate: (url: string) => void;
+  params?: RouteMatch<string>;
+}
+
 export function RouterProvider(
-  this: Remix.Handle<{
-    serverUrl: string;
-    navigate: (url: string) => void;
-    params?: RouteMatch<string>;
-  }>
+  handle: Handle<{ url?: string; children: RemixNode }, RouterContext>
 ) {
-  const context = {
+  const context: RouterContext = {
     serverUrl: "",
     navigate: (url: string) => {
       history.pushState({}, "", url);
-      this.render();
+      handle.update();
     },
   };
-  this.context.set(context);
+  handle.context.set(context);
 
   const handlePopState = () => {
-    this.render();
+    handle.update();
   };
   if (!isServer) {
     addEventListener("popstate", handlePopState);
+    handle.signal.addEventListener("abort", () => {
+      removeEventListener("popstate", handlePopState);
+    });
   }
-  return ({ url, children }: { url?: string; children: Remix.RemixNode }) => {
+  return ({ url, children }: { url?: string; children: RemixNode }) => {
     if (isServer && url) {
       context.serverUrl = url;
     }
@@ -35,7 +39,7 @@ export function RouterProvider(
   };
 }
 
-export const useLocation = (inst: Remix.Handle) => {
+export const useLocation = (inst: Handle<any, any>) => {
   if (isServer) {
     const url = new URL(inst.context.get(RouterProvider).serverUrl);
     return url.pathname;
@@ -43,7 +47,7 @@ export const useLocation = (inst: Remix.Handle) => {
   return location.pathname;
 };
 
-export const useFullLocation = (inst: Remix.Handle) => {
+export const useFullLocation = (inst: Handle<any, any>) => {
   if (isServer) {
     const url = new URL(inst.context.get(RouterProvider).serverUrl);
     return url.href;
@@ -51,40 +55,41 @@ export const useFullLocation = (inst: Remix.Handle) => {
   return location.href;
 };
 
-export const useNavigate = (inst: Remix.Handle) => {
+export const useNavigate = (inst: Handle<any, any>) => {
   return inst.context.get(RouterProvider).navigate;
 };
 
 export const useParams = <T extends Record<string, unknown>>(
-  inst: Remix.Handle
+  inst: Handle<any, any>
 ) => {
   const p = inst.context.get(RouterProvider).params;
   if (!p) throw "error params";
   return p.params as T;
 };
 
-export function Link(this: Remix.Handle) {
-  const navigate = useNavigate(this);
-  return (props: Remix.Props<"a">) => {
+export function Link(handle: Handle) {
+  const navigate = useNavigate(handle);
+  return ({ to, children, className }: { to: string; children: RemixNode; className?: string }) => {
     return (
       <a
-        {...props}
-        on={dom.click((e) => {
-          e.preventDefault();
-          if (props.href) {
-            navigate(props.href);
-          }
-        })}
+        href={to}
+        className={className}
+        mix={[
+          on("click", (e) => {
+            e.preventDefault();
+            navigate(to);
+          }),
+        ]}
       >
-        {props.children}
+        {children}
       </a>
     );
   };
 }
 
-export type RouteType = Record<string, Remix.Component>;
+export type RouteType = Record<string, any>;
 
-export const useRouter = (inst: Remix.Handle, route: RouteType) => {
+export const useRouter = (inst: Handle<any, any>, route: RouteType) => {
   const location = useFullLocation(inst);
 
   for (const [pattern, content] of Object.entries(route)) {
@@ -95,10 +100,12 @@ export const useRouter = (inst: Remix.Handle, route: RouteType) => {
       return content;
     }
   }
-  return <></>;
+  return () => <></>;
 };
 
-export function Outlet(this: Remix.Handle) {
-  const Route = useRouter(this, route);
-  return <Route />;
+export function Outlet(handle: Handle) {
+  return () => {
+    const Route = useRouter(handle, route);
+    return <Route />;
+  };
 }

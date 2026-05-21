@@ -11,10 +11,9 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@remix-run/dom": "0.0.0-experimental-remix-jam.6",
-    "@remix-run/events": "0.0.0-experimental-remix-jam.5",
     "@remix-run/route-pattern": "0.15.0",
-    "hono": "4.10.4"
+    "hono": "4.10.4",
+    "remix": "^3.0.0-beta.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

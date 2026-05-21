@@ -168,18 +168,15 @@ importers:
 
   remix3-sample06:
     dependencies:
-      '@remix-run/dom':
-        specifier: 0.0.0-experimental-remix-jam.6
-        version: 0.0.0-experimental-remix-jam.6
-      '@remix-run/events':
-        specifier: 0.0.0-experimental-remix-jam.5
-        version: 0.0.0-experimental-remix-jam.5
       '@remix-run/route-pattern':
         specifier: 0.15.0
         version: 0.15.0
       hono:
         specifier: 4.10.4
         version: 4.10.4
+      remix:
+        specifier: ^3.0.0-beta.2
+        version: 3.0.0-beta.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
     devDependencies:
       '@eslint/js':
         specifier: ^9.39.1

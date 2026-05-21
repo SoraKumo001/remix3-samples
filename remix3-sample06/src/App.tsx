@@ -1,6 +1,6 @@
-import { type Remix } from "@remix-run/dom";
+import { type Handle } from "remix/ui";
 import { Outlet } from "./provider/RouterProvider";
 
-export function App(this: Remix.Handle) {
-  return <Outlet />;
+export function App(handle: Handle) {
+  return () => <Outlet />;
 }

@@ -1,4 +1,4 @@
-import { renderToStream } from "@remix-run/dom/server";
+import { renderToStream, renderToString } from "remix/ui/server";
 import { Layout } from "./root";
 import {
   resolveFrame,
@@ -17,7 +17,14 @@ const handler = (url: string) => {
         </SSRProvider>
       </RouterProvider>,
       {
-        resolveFrame: (src) => resolveFrame(src, storage.states),
+        resolveFrame: async (src) => {
+          const node = await resolveFrame(src, storage.states);
+          return renderToString(
+            <RouterProvider url={url}>
+              {node}
+            </RouterProvider>
+          );
+        },
       }
     ),
     {

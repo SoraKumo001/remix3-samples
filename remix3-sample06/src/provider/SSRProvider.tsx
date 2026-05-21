@@ -1,4 +1,4 @@
-import { Frame, type Remix } from "@remix-run/dom";
+import { Frame, type Handle, type RemixNode } from "remix/ui";
 
 const isServer = typeof window === "undefined";
 const SSR_DATA_NAME = "__REMIX3_SSR__";
@@ -9,7 +9,7 @@ type SSRResult<T = unknown> = {
 };
 
 type SSRState<T = unknown> = SSRResult<T> & {
-  children: Remix.RemixNode;
+  children: RemixNode;
   promise: Promise<T>;
 };
 
@@ -17,16 +17,16 @@ export type SSRProps = {
   states: Record<string, SSRState>;
 };
 
-export function SSRProvider(this: Remix.Handle<SSRProps>) {
+export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: RemixNode }, SSRProps>) {
   return ({
     storage,
     children,
   }: {
     storage?: SSRProps;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
     if (isServer) {
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: {},
         }
@@ -34,7 +34,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
     } else {
       const node = document.getElementById(SSR_DATA_NAME);
       const states = JSON.parse(node?.innerText ?? "{}");
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: Object.fromEntries(
             Object.entries(states).map(([key, v]) => [
@@ -42,7 +42,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
               {
                 state: "finished",
                 promise: Promise.resolve(v),
-                value: v,
+                value: v as any,
                 children: undefined,
               },
             ])
@@ -59,7 +59,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
   };
 }
 
-export function SSRData(this: Remix.Handle<SSRResult>) {
+export function SSRData(handle: Handle<{ value: unknown; state: "idle" | "loading" | "finished"; children: RemixNode }, SSRResult>) {
   return ({
     value,
     state,
@@ -67,56 +67,55 @@ export function SSRData(this: Remix.Handle<SSRResult>) {
   }: {
     value: unknown;
     state: "idle" | "loading" | "finished";
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
-    this.context.set({ value, state });
+    handle.context.set({ value, state });
     return children;
   };
 }
 
-export function SSRFetch<T>(
-  this: Remix.Handle,
-  {
+export function SSRFetch<T>(handle: Handle) {
+  return ({
     name,
     action,
     children,
   }: {
     name: string;
     action: () => Promise<T>;
-    children: Remix.RemixNode;
-  }
-) {
-  const context = this.context.get(SSRProvider);
-  if (!context) return undefined;
-  const frameName = `ssr:${name}`;
-  if (!context.states[frameName]) {
-    const promise = action();
-    const state: SSRState<T> = {
-      promise,
-      state: "loading",
-      value: undefined,
-      children,
-    };
-    context.states[frameName] = state;
-    promise.then((v) => {
-      context.states[frameName].state = "finished";
-      context.states[frameName].value = v;
-      if (!isServer) this.render();
-    });
-  }
-  if (isServer) {
-    return <Frame src={frameName} />;
-  } else {
-    const state = context.states[frameName];
-    return (
-      <SSRData value={state.value} state={state.state}>
-        {children}
-      </SSRData>
-    );
-  }
+    children: RemixNode;
+  }) => {
+    const context = handle.context.get(SSRProvider);
+    if (!context) return undefined;
+    const frameName = `ssr:${name}`;
+    if (!context.states[frameName]) {
+      const promise = action();
+      const state: SSRState<T> = {
+        promise,
+        state: "loading",
+        value: undefined,
+        children,
+      };
+      context.states[frameName] = state;
+      promise.then((v) => {
+        context.states[frameName].state = "finished";
+        context.states[frameName].value = v;
+        if (!isServer) handle.update();
+      });
+    }
+    if (isServer) {
+      return <Frame src={frameName} />;
+    } else {
+      const state = context.states[frameName];
+      return (
+        <SSRData value={state.value} state={state.state}>
+          {children}
+        </SSRData>
+      );
+    }
+  };
 }
 
-export const useSSR = <T,>(inst: Remix.Handle) => {
+export const useSSR = <T,>(inst: Handle) => {
   return inst.context.get(SSRData) as SSRResult<T>;
 };
 

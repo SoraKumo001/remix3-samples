@@ -4,6 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
 export default defineConfig(({ isSsrBuild }) => {
   return {
+    esbuild: {
+      jsx: "automatic",
+      jsxImportSource: "remix/ui",
+    },
+    ssr: {
+      noExternal: true,
+    },
     build: {
       outDir: isSsrBuild ? "./dist" : "./dist/assets",
       ssr: isSsrBuild,
