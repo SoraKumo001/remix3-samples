@@ -1,24 +1,22 @@
 {
   "name": "remix3-sample01",
   "version": "1.0.0",
+  "private": true,
+  "type": "module",
   "scripts": {
     "watch": "rolldown --watch -c",
     "build": "rolldown -c",
     "start": "opener public/index.html",
-    "predeploy": "pnpm run build"
+    "typecheck": "tsc --noEmit"
   },
-  "type": "module",
   "dependencies": {
-    "@remix-run/dom": "0.0.0-experimental-remix-jam.6",
-    "@remix-run/events": "0.0.0-experimental-remix-jam.5"
+    "remix": "^3.0.0-beta.2"
   },
   "devDependencies": {
-    "@playwright/test": "1.56.1",
-    "@types/node": "24.10.0",
-    "gh-pages": "6.3.0",
-    "opener": "1.5.2",
-    "rolldown": "1.0.0-beta.47",
-    "typescript": "5.9.3"
+    "@types/node": "latest",
+    "opener": "^1.5.2",
+    "rolldown": "1.0.2",
+    "typescript": "latest"
   },
   "repository": "https://github.com/SoraKumo001/remix3-sample01",
   "author": "SoraKumo <info@croud.jp>",

@@ -3,22 +3,29 @@
 https://sorakumo001.github.io/remix3-sample01/
 
 ```tsx
-import { createRoot, type Remix } from "@remix-run/dom";
-import { press } from "@remix-run/events/press";
+import { createRoot, type Handle, on } from "remix/ui";
 
-function App(this: Remix.Handle) {
+function App(handle: Handle) {
   let count = 0;
   return () => (
     <button
-      on={press(() => {
-        count++;
-        this.render();
-      })}
+      mix={[
+        on("click", () => {
+          count++;
+          handle.update();
+        }),
+      ]}
     >
       Count: {count}
     </button>
   );
 }
 
-createRoot(document.body).render(<App />);
+if (document.body) {
+  createRoot(document.body).render(<App />);
+} else {
+  window.addEventListener("DOMContentLoaded", () => {
+    createRoot(document.body).render(<App />);
+  }, { once: true });
+}
 ```
