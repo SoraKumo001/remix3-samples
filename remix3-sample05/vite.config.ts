@@ -21,10 +21,11 @@ export default defineConfig({
     },
   ],
   base: "./",
-  resolve: {
-    alias: {
-      "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-      "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
-    },
+  esbuild: {
+    jsx: "automatic",
+    jsxImportSource: "remix/ui",
+  },
+  ssr: {
+    noExternal: true,
   },
 });

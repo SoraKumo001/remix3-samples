@@ -1,36 +1,41 @@
-import { type Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
+import { type Handle, on, type RemixNode } from "remix/ui";
+
 
 const isServer = typeof window === "undefined";
 
+interface RouterContext {
+  url: string;
+  navigate: (url: string) => void;
+}
+
 export function RouterProvider(
-  this: Remix.Handle<{
-    url: string;
-    navigate: (url: string) => void;
-  }>
+  handle: Handle<{ url: string; children: RemixNode }, RouterContext>
 ) {
-  const context = {
+  const context: RouterContext = {
     url: "",
     navigate: (url: string) => {
       history.pushState({}, "", url);
-      this.render();
+      handle.update();
     },
   };
-  this.context.set(context);
+  handle.context.set(context);
 
   const handlePopState = () => {
-    this.render();
+    handle.update();
   };
   if (!isServer) {
     addEventListener("popstate", handlePopState);
+    handle.signal.addEventListener("abort", () => {
+      removeEventListener("popstate", handlePopState);
+    });
   }
-  return ({ url, children }: { url: string; children: Remix.RemixNode }) => {
+  return ({ url, children }: { url: string; children: RemixNode }) => {
     context.url = url;
     return <>{children}</>;
   };
 }
 
-export const useLocation = (inst: Remix.Handle) => {
+export const useLocation = (inst: Handle<any, any>) => {
   if (isServer) {
     const url = new URL(inst.context.get(RouterProvider).url);
     return url.pathname;
@@ -38,20 +43,22 @@ export const useLocation = (inst: Remix.Handle) => {
   return location.pathname;
 };
 
-export const useNavigate = (inst: Remix.Handle) => {
+export const useNavigate = (inst: Handle<any, any>) => {
   return inst.context.get(RouterProvider).navigate;
 };
 
-export function Link(this: Remix.Handle) {
-  const navigate = useNavigate(this);
-  return ({ to, children }: { to: string; children: Remix.RemixNode }) => {
+export function Link(handle: Handle) {
+  const navigate = useNavigate(handle);
+  return ({ to, children }: { to: string; children: RemixNode }) => {
     return (
       <a
         href={to}
-        on={dom.click((e) => {
-          e.preventDefault();
-          navigate(to);
-        })}
+        mix={[
+          on("click", (e) => {
+            e.preventDefault();
+            navigate(to);
+          }),
+        ]}
       >
         {children}
       </a>

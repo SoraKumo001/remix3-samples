@@ -1,5 +1,5 @@
 import { App } from "./App";
-import { createRoot } from "@remix-run/dom";
+import { createRoot } from "remix/ui";
 
 createRoot(document.getElementById("root")!).render(<App />);
 

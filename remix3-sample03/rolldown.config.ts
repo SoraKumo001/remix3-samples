@@ -8,12 +8,6 @@ export default [
       dir: "public",
       entryFileNames: "[name].js",
     },
-    resolve: {
-      alias: {
-        "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-        "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
-      },
-    },
   }),
   defineConfig({
     input: ["./src/server.tsx"],
@@ -21,12 +15,6 @@ export default [
       dir: "dist",
       entryFileNames: "index.js",
     },
-    external: (id) => builtinModules.includes(id),
-    resolve: {
-      alias: {
-        "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-        "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
-      },
-    },
+    external: (id) => id.startsWith("node:") || builtinModules.includes(id),
   }),
 ];

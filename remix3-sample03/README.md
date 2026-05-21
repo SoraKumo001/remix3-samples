@@ -13,12 +13,6 @@ export default [
       dir: "public",
       entryFileNames: "[name].js",
     },
-    resolve: {
-      alias: {
-        "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-        "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
-      },
-    },
   }),
   defineConfig({
     input: ["./src/server.tsx"],
@@ -26,30 +20,23 @@ export default [
       dir: "dist",
       entryFileNames: "index.js",
     },
-    external: (id) => builtinModules.includes(id),
-    resolve: {
-      alias: {
-        "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-        "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
-      },
-    },
+    external: (id) => id.startsWith("node:") || builtinModules.includes(id),
   }),
 ];
 ```
 
 ## src/server.tsx
 
-```ts
+```tsx
 import { Hono } from "hono";
-import { renderToStream } from "@remix-run/dom/server";
-import { Layout } from "./root";
+import { renderToStream } from "remix/ui/server";
+import { Layout } from "./root.tsx";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { jsx } from "@remix-run/dom/jsx-runtime";
 import { serve } from "@hono/node-server";
 
 const app = new Hono();
 app.get("/", () => {
-  return new Response(renderToStream(jsx(Layout, {})), {
+  return new Response(renderToStream(<Layout />), {
     headers: {
       "Content-Type": "text/html",
     },
@@ -64,16 +51,16 @@ console.log("http://localhost:3000");
 
 ## src/client.tsx
 
-```ts
-import { createRoot } from "@remix-run/dom";
-import { App } from "./App";
+```tsx
+import { createRoot } from "remix/ui";
+import { App } from "./App.tsx";
+
 if (document.body) {
   createRoot(document.body).render(<App />);
 } else {
   window.addEventListener(
-    "load",
+    "DOMContentLoaded",
     () => {
-      console.log(document.body.innerHTML);
       createRoot(document.body).render(<App />);
     },
     { once: true }

@@ -1,11 +1,11 @@
-import { Frame, type Remix } from "@remix-run/dom";
+import { Frame, type Handle, type RemixNode } from "remix/ui";
 
 const isServer = typeof window === "undefined";
 
 type SSRState<T = unknown> = {
   state: "idle" | "loading" | "finished";
   value: T;
-  children: Remix.RemixNode;
+  children: RemixNode;
   promise: Promise<T>;
 };
 
@@ -13,16 +13,16 @@ export type SSRProps = {
   states: Record<string, SSRState>;
 };
 
-export function SSRProvider(this: Remix.Handle<SSRProps>) {
+export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: RemixNode }, SSRProps>) {
   return ({
     storage,
     children,
   }: {
     storage?: SSRProps;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
     if (isServer) {
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: {},
         }
@@ -30,7 +30,7 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
     } else {
       const node = document.getElementById("__REMIX3_SSR__");
       const states = JSON.parse(node?.innerText ?? "{}");
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: Object.fromEntries(
             Object.entries(states).map(([key, v]) => [
@@ -55,21 +55,21 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
   };
 }
 
-export function SSRData(this: Remix.Handle<unknown>) {
+export function SSRData(handle: Handle<{ value: unknown; children: RemixNode }, unknown>) {
   return ({
     value,
     children,
   }: {
     value: unknown;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
-    this.context.set(value);
+    handle.context.set(value);
     return children;
   };
 }
 
-export function SSRFetch(this: Remix.Handle) {
-  const context = this.context.get(SSRProvider);
+export function SSRFetch(handle: Handle<{ name: string; action: () => Promise<void>; children: RemixNode }>) {
+  const context = handle.context.get(SSRProvider);
   return ({
     name,
     action,
@@ -77,7 +77,7 @@ export function SSRFetch(this: Remix.Handle) {
   }: {
     name: string;
     action: () => Promise<void>;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
     if (isServer) {
       if (!context.states[name]) {
@@ -103,7 +103,7 @@ export function SSRFetch(this: Remix.Handle) {
         promise.then((v) => {
           context.states[name].state = "finished";
           context.states[name].value = v;
-          this.render();
+          handle.update();
         });
       }
       const state = context.states[name];
@@ -112,7 +112,7 @@ export function SSRFetch(this: Remix.Handle) {
   };
 }
 
-export const useSSR = <T,>(inst: Remix.Handle) => {
+export const useSSR = <T,>(inst: Handle) => {
   return inst.context.get(SSRData) as T;
 };
 

@@ -10,8 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
-    "@remix-run/dom": "0.0.0-experimental-remix-jam.6",
-    "@remix-run/events": "0.0.0-experimental-remix-jam.5"
+    "remix": "^3.0.0-beta.2"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",

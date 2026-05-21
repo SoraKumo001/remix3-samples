@@ -1,18 +1,17 @@
-import { type Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
+import { type Handle, on } from "remix/ui";
 
-export function Test(this: Remix.Handle) {
+export function Test(handle: Handle) {
   let mouseState = "mouseOut";
   return ({ value }: { value: string }) => (
     <div
-      on={[
-        dom.mouseover(() => {
+      mix={[
+        on("mouseover", () => {
           mouseState = "mouseOver";
-          this.render();
+          handle.update();
         }),
-        dom.mouseout(() => {
+        on("mouseout", () => {
           mouseState = "mouseOut";
-          this.render();
+          handle.update();
         }),
       ]}
     >

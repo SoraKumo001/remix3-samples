@@ -1,8 +1,8 @@
-import type { Remix } from "@remix-run/dom";
+import type { Handle } from "remix/ui";
 import { App } from "./components/App";
 import { SSRProvider, type SSRProps } from "./SSRProvider";
 
-export function Layout(this: Remix.Handle) {
+export function Layout(_handle: Handle) {
   return ({ storage }: { storage: SSRProps }) => (
     <html lang="ja">
       <head>

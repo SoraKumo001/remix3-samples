@@ -1,9 +1,10 @@
 import { Hono } from "hono";
-import { renderToStream } from "@remix-run/dom/server";
+import { renderToStream, renderToString } from "remix/ui/server";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Layout } from "./root";
 import { resolveFrame, type SSRProps } from "./SSRProvider";
 import { RouterProvider } from "./RouterProvider";
+
 
 const app = new Hono();
 app.use("/*", serveStatic({ root: "./public" }));
@@ -15,7 +16,14 @@ app.get("*", async (c) => {
         <Layout storage={storage} />
       </RouterProvider>,
       {
-        resolveFrame: (src) => resolveFrame(src, storage.states),
+        resolveFrame: async (src) => {
+          const node = await resolveFrame(src, storage.states);
+          return renderToString(
+            <RouterProvider url={c.req.url}>
+              {node}
+            </RouterProvider>
+          );
+        },
       }
     ),
     {

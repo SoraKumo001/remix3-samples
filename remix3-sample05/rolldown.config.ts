@@ -9,8 +9,8 @@ export default [
     },
     resolve: {
       alias: {
-        "react/jsx-runtime": "@remix-run/dom/jsx-runtime",
-        "react/jsx-dev-runtime": "@remix-run/dom/jsx-dev-runtime",
+        "react/jsx-runtime": "remix/ui/jsx-runtime",
+        "react/jsx-dev-runtime": "remix/ui/jsx-dev-runtime",
       },
     },
   }),

@@ -1,4 +1,4 @@
-import { createRoot } from "@remix-run/dom";
+import { createRoot } from "remix/ui";
 import { App } from "./components/App";
 import { SSRProvider } from "./SSRProvider";
 import { RouterProvider } from "./RouterProvider";
@@ -15,9 +15,11 @@ if (document.body) {
     "DOMContentLoaded",
     () => {
       createRoot(document.body).render(
-        <SSRProvider>
-          <App />
-        </SSRProvider>
+        <RouterProvider url={location.toString()}>
+          <SSRProvider>
+            <App />
+          </SSRProvider>
+        </RouterProvider>
       );
     },
     { once: true }

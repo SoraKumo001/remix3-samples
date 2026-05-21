@@ -1,19 +1,17 @@
-import { type Remix } from "@remix-run/dom";
-import { press } from "@remix-run/events/press";
-import { dom } from "@remix-run/events";
+import { type Handle, on } from "remix/ui";
 
-function Test(this: Remix.Handle) {
+function Test(handle: Handle) {
   let mouseState = "mouseOut";
   return ({ value }: { value: string }) => (
     <div
-      on={[
-        dom.mouseover(() => {
+      mix={[
+        on("mouseover", () => {
           mouseState = "mouseOver";
-          this.render();
+          handle.update();
         }),
-        dom.mouseout(() => {
+        on("mouseout", () => {
           mouseState = "mouseOut";
-          this.render();
+          handle.update();
         }),
       ]}
     >
@@ -22,16 +20,16 @@ function Test(this: Remix.Handle) {
   );
 }
 
-export function App(this: Remix.Handle) {
+export function App(handle: Handle) {
   let count = 0;
 
   return () => (
     <>
       <button
-        on={[
-          press(() => {
+        mix={[
+          on("click", () => {
             count++;
-            this.render();
+            handle.update();
           }),
         ]}
       >

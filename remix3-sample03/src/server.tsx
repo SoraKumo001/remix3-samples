@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { renderToStream } from "@remix-run/dom/server";
+import { renderToStream } from "remix/ui/server";
 import { Layout } from "./root";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { serve } from "@hono/node-server";

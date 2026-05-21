@@ -1,8 +1,8 @@
-import { type Remix } from "@remix-run/dom";
+import { type Handle } from "remix/ui";
 import { SSRFetch, useSSR } from "../SSRProvider";
 import { Link } from "../RouterProvider";
 
-interface Weather {
+interface WeatherData {
   publishingOffice: string;
   reportDatetime: Date;
   targetArea: string;
@@ -10,7 +10,7 @@ interface Weather {
   text: string;
 }
 
-export function Weather(this: Remix.Handle) {
+export function Weather(_handle: Handle) {
   return ({ id }: { id: string }) => (
     <SSRFetch
       name={`weather-${id}`}
@@ -25,9 +25,9 @@ export function Weather(this: Remix.Handle) {
   );
 }
 
-function WeatherItem(this: Remix.Handle) {
+function WeatherItem(handle: Handle) {
   return () => {
-    const value = useSSR<Weather>(this);
+    const value = useSSR<WeatherData>(handle);
     return (
       <div>
         <div>
