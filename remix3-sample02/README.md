@@ -1,5 +1,5 @@
-# remix3-sample02
+# Remix 3 Sample 02
 
-Remix3 on Vite
+A sample project for Remix 3 (vDOM) running on Vite.
 
-https://sorakumo001.github.io/remix3-sample02/
+[Live Demo](https://sorakumo001.github.io/remix3-sample02/)

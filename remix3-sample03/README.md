@@ -1,4 +1,6 @@
-# remix3-sample03
+# Remix 3 Sample 03
+
+A sample project for Remix 3 (vDOM) utilizing Hono and Rolldown for server and client bundling.
 
 ## rolldown.config.ts
 
