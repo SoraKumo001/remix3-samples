@@ -148,22 +148,22 @@ function Page(handle: Handle) {
               ref((node: HTMLInputElement) => {
                 refInput = node;
               }),
-              on("focus", () => {
+              on<HTMLInputElement, "focus">("focus", () => {
                 focus = true;
                 handle.update();
               }),
-              on("blur", () => {
+              on<HTMLInputElement, "blur">("blur", () => {
                 focus = false;
                 handle.update();
               }),
-              on("paste", (e: ClipboardEvent) => {
+              on<HTMLInputElement, "paste">("paste", (e) => {
                 e.preventDefault();
                 if (e.clipboardData?.files)
                   onFiles(Array.from(e.clipboardData.files));
               }),
-              on("change", (e: Event) => {
+              on<HTMLInputElement, "change">("change", (e) => {
                 e.preventDefault();
-                const target = e.currentTarget as HTMLInputElement;
+                const target = e.currentTarget;
                 if (target.files) onFiles(Array.from(target.files));
               }),
             ]}
@@ -174,21 +174,21 @@ function Page(handle: Handle) {
               focus && "outline outline-blue-400",
             )}
             mix={[
-              on("dragover", (e: DragEvent) => {
+              on<HTMLDivElement, "dragover">("dragover", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
               }),
-              on("dragenter", (e: DragEvent) => {
+              on<HTMLDivElement, "dragenter">("dragenter", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
               }),
-              on("dblclick", () => {
+              on<HTMLDivElement, "dblclick">("dblclick", () => {
                 refInput.click();
               }),
-              on("click", () => {
+              on<HTMLDivElement, "click">("click", () => {
                 refInput.focus();
               }),
-              on("drop", (e: DragEvent) => {
+              on<HTMLDivElement, "drop">("drop", (e) => {
                 if (e.dataTransfer?.files)
                   onFiles(Array.from(e.dataTransfer.files));
                 e.preventDefault();
@@ -200,9 +200,8 @@ function Page(handle: Handle) {
           <textarea
             className="border flex-1 border-gray-400 p-2 rounded bg-gray-50 font-mono text-nowrap"
             readOnly
-          >
-            {logText}
-          </textarea>
+            value={logText}
+          />
         </div>
         <button
           className="text-blue-700 hover:text-white border border-blue-500 hover:bg-blue-600 rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-pointer"
@@ -222,8 +221,8 @@ function Page(handle: Handle) {
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[0]}
             mix={[
-              on("change", (e: Event) => {
-                const target = e.currentTarget as HTMLInputElement;
+              on<HTMLInputElement, "change">("change", (e) => {
+                const target = e.currentTarget;
                 size = [Math.max(0, Number(target.value)), size[1]];
                 handle.update();
               }),
@@ -237,8 +236,8 @@ function Page(handle: Handle) {
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[1]}
             mix={[
-              on("change", (e: Event) => {
-                const target = e.currentTarget as HTMLInputElement;
+              on<HTMLInputElement, "change">("change", (e) => {
+                const target = e.currentTarget;
                 size = [size[0], Math.max(0, Number(target.value))];
                 handle.update();
               }),
@@ -252,8 +251,8 @@ function Page(handle: Handle) {
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={speed}
             mix={[
-              on("change", (e: Event) => {
-                const target = e.currentTarget as HTMLInputElement;
+              on<HTMLInputElement, "change">("change", (e) => {
+                const target = e.currentTarget;
                 speed = Math.min(10, Math.max(0, Number(target.value)));
                 handle.update();
               }),
@@ -267,8 +266,8 @@ function Page(handle: Handle) {
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={quality}
             mix={[
-              on("change", (e: Event) => {
-                const target = e.currentTarget as HTMLInputElement;
+              on<HTMLInputElement, "change">("change", (e) => {
+                const target = e.currentTarget;
                 quality = Math.min(100, Math.max(0, Number(target.value)));
                 handle.update();
               }),
@@ -282,8 +281,8 @@ function Page(handle: Handle) {
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={limitWorker}
             mix={[
-              on("change", (e: Event) => {
-                const target = e.currentTarget as HTMLInputElement;
+              on<HTMLInputElement, "change">("change", (e) => {
+                const target = e.currentTarget;
                 limitWorker = Math.max(1, Number(target.value));
                 setLimit(limitWorker);
                 launchWorker();
@@ -299,8 +298,8 @@ function Page(handle: Handle) {
               type="checkbox"
               checked={filter}
               mix={[
-                on("change", (e: Event) => {
-                  const target = e.currentTarget as HTMLInputElement;
+                on<HTMLInputElement, "change">("change", (e) => {
+                  const target = e.currentTarget;
                   filter = target.checked;
                   handle.update();
                 }),
@@ -316,8 +315,8 @@ function Page(handle: Handle) {
                 type="checkbox"
                 checked={formatList.includes(format)}
                 mix={[
-                  on("change", (e: Event) => {
-                    const target = e.currentTarget as HTMLInputElement;
+                  on<HTMLInputElement, "change">("change", (e) => {
+                    const target = e.currentTarget;
                     const checked = target.checked;
                     if (checked) formatList = [...formatList, format];
                     else formatList = formatList.filter((f) => f !== format);
