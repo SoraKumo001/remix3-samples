@@ -19,16 +19,17 @@ const handler = (url: string) => {
       {
         resolveFrame: async (src) => {
           const node = await resolveFrame(src, storage.states);
-          if (!node) return undefined;
-          return renderToString(<RouterProvider url={url}>{node}</RouterProvider>);
+          return renderToString(
+            <RouterProvider url={url}>{node}</RouterProvider>,
+          );
         },
-      }
+      },
     ),
     {
       headers: {
         "Content-Type": "text/html",
       },
-    }
+    },
   );
 };
 
