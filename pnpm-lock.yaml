@@ -220,21 +220,15 @@ importers:
 
   remix3-sample07:
     dependencies:
-      '@remix-run/component':
-        specifier: 0.2.1
-        version: 0.2.1
-      '@remix-run/dom':
-        specifier: 0.0.0-experimental-remix-jam.6
-        version: 0.0.0-experimental-remix-jam.6
-      '@remix-run/events':
-        specifier: 0.0.0-experimental-remix-jam.5
-        version: 0.0.0-experimental-remix-jam.5
       '@remix-run/route-pattern':
         specifier: 0.15.0
         version: 0.15.0
       hono:
         specifier: 4.10.4
         version: 4.10.4
+      remix:
+        specifier: ^3.0.0-beta.2
+        version: 3.0.0-beta.2(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)
       wasm-image-optimization:
         specifier: 1.4.2
         version: 1.4.2
@@ -1834,9 +1828,6 @@ packages:
     resolution: {integrity: sha512-deoObBzsFNOwJj+Rj3DERNj3F8CEH/wXcfk5JqvQa7AR1CQpplok45JAX5znBffL18ikqJvCTdOYpD8XdRzeig==}
     engines: {node: '>=24.3.0'}
 
-  '@remix-run/component@0.2.1':
-    resolution: {integrity: sha512-RkSqAFxlkQhISKZR7cR0ULyTNXrEXQNxSrg5m2e2AnByO7Ix5mQ1g71VLwArhCRshUxOv20cUBto2Tq1MrGBJw==}
-
   '@remix-run/compression-middleware@0.1.9':
     resolution: {integrity: sha512-F2Z+LDI4n6vBIk+oIwlUX1lc5oMMvZ9WEiLxnlyPkMvoPbh28dYFme62lAUQXIC8Y4lZ+NkLLdZZ3wioLLZ9SA==}
 
@@ -1877,12 +1868,6 @@ packages:
   '@remix-run/data-table@0.3.0':
     resolution: {integrity: sha512-2Ikjlm3T2qtMTeWm5v/76iXEP2fqqdJGxjTZ6OFre5b5BFoRyaq/iBmDc0lkXPoOGvkeOxNuRo7L0dRkMTXwJQ==}
 
-  '@remix-run/dom@0.0.0-experimental-remix-jam.6':
-    resolution: {integrity: sha512-eQguiFB+Qm0EAA1xK1jLew2M9jp2rGcN+tknPv9gQd5nhT+eetwt3BHaYt9UcJWd3+p0g0cBt23CJrQOK2WStQ==}
-
-  '@remix-run/events@0.0.0-experimental-remix-jam.5':
-    resolution: {integrity: sha512-rbKP27/YkLZq0gbCy3QpwaHQzJg41IgbC//8SggPgMtWxZdxkcnkWmQGMLH0xwQcBlZ3yLtZRDQvL+ir4GAA6g==}
-
   '@remix-run/fetch-proxy@0.8.2':
     resolution: {integrity: sha512-PtwhtKLogCjcF6fokd3BxwPLbZJK1ZgX0dG78Yg+9RzqgCu8UfvOuuNdUadi4eJEhNYr9+KFKyiWYdYxYjLetA==}
 
@@ -1909,9 +1894,6 @@ packages:
 
   '@remix-run/html-template@0.3.1':
     resolution: {integrity: sha512-4yhaBtfh1iVC1razTr+ehu1xmKia0zvE4GWQ6JF2IRiA3kmw+DlrdNFEFqx5Wn1eXAM0vxxcJLdLD7e0XMzH5A==}
-
-  '@remix-run/interaction@0.3.0':
-    resolution: {integrity: sha512-lJ/wOkXJOa6913j7x9LSfx7q+5b3FQCd+uzh36G3oUjL0/4AcI1Ch3LiJmHTNmrlHgKHlb3D9idHjpOrpbljyA==}
 
   '@remix-run/lazy-file@5.0.4':
     resolution: {integrity: sha512-OwG3AIDYEHiuhqK6XstZk/IolhWlIxhrLNSMRxP5BVREHUl1c7RrzcbSHqXXGzNXZUa1+mER9kLf71tT/MgssA==}
@@ -1966,9 +1948,6 @@ packages:
 
   '@remix-run/static-middleware@0.4.10':
     resolution: {integrity: sha512-wloJGCiyuIQ/teGNHKwIyWZB54PEU68G89Fm31gTczig6P03SSe8eZzOlbJHirMpNWfHsqtLEGbOgCzyrkdc9Q==}
-
-  '@remix-run/style@0.0.0-experimental-remix-jam.5':
-    resolution: {integrity: sha512-XXCOWiY6lGqeJrGQ47JP5fFFuZXbBsFjBbTu46FNxsox1cny8ZPyZ7C674kX92UimGpOU+zv/lPOoU+ZWGim+w==}
 
   '@remix-run/tar-parser@0.7.1':
     resolution: {integrity: sha512-NZKTuA66rj0zqpljWAb6v147cNu5BtRCiv8FY5kn64ZPvLmoI62Ehm2hoUh0g0wJHeCNmgS5QZg1xhw6FX67SA==}
@@ -4514,10 +4493,6 @@ snapshots:
       - '@emnapi/runtime'
       - playwright
 
-  '@remix-run/component@0.2.1':
-    dependencies:
-      '@remix-run/interaction': 0.3.0
-
   '@remix-run/compression-middleware@0.1.9':
     dependencies:
       '@remix-run/fetch-router': 0.19.1
@@ -4560,13 +4535,6 @@ snapshots:
 
   '@remix-run/data-table@0.3.0': {}
 
-  '@remix-run/dom@0.0.0-experimental-remix-jam.6':
-    dependencies:
-      '@remix-run/events': 0.0.0-experimental-remix-jam.5
-      '@remix-run/style': 0.0.0-experimental-remix-jam.5
-
-  '@remix-run/events@0.0.0-experimental-remix-jam.5': {}
-
   '@remix-run/fetch-proxy@0.8.2':
     dependencies:
       '@remix-run/headers': 0.21.0
@@ -4602,8 +4570,6 @@ snapshots:
   '@remix-run/headers@0.21.0': {}
 
   '@remix-run/html-template@0.3.1': {}
-
-  '@remix-run/interaction@0.3.0': {}
 
   '@remix-run/lazy-file@5.0.4':
     dependencies:
@@ -4671,8 +4637,6 @@ snapshots:
       '@remix-run/html-template': 0.3.1
       '@remix-run/mime': 0.4.1
       '@remix-run/response': 0.3.5
-
-  '@remix-run/style@0.0.0-experimental-remix-jam.5': {}
 
   '@remix-run/tar-parser@0.7.1': {}
 

@@ -1,8 +1,6 @@
-import type { Handle } from "@remix-run/component";
-import { useRouter } from "./provider/RouterProvider";
-import { route } from "virtual:routes";
+import { type Handle } from "remix/ui";
+import { Outlet } from "./provider/RouterProvider";
 
-export function App(this: Handle) {
-  const Outlet = useRouter(this, route);
-  return <Outlet />;
+export function App(handle: Handle) {
+  return () => <Outlet />;
 }

@@ -1,5 +1,4 @@
-import type { Handle, RemixNode } from "@remix-run/component";
-import { Frame } from "@remix-run/dom";
+import { Frame, type Handle, type RemixNode } from "remix/ui";
 
 const isServer = typeof window === "undefined";
 const SSR_DATA_NAME = "__REMIX3_SSR__";
@@ -18,7 +17,7 @@ export type SSRProps = {
   states: Record<string, SSRState>;
 };
 
-export function SSRProvider(this: Handle<SSRProps>) {
+export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: RemixNode }, SSRProps>) {
   return ({
     storage,
     children,
@@ -27,7 +26,7 @@ export function SSRProvider(this: Handle<SSRProps>) {
     children: RemixNode;
   }) => {
     if (isServer) {
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: {},
         }
@@ -35,7 +34,7 @@ export function SSRProvider(this: Handle<SSRProps>) {
     } else {
       const node = document.getElementById(SSR_DATA_NAME);
       const states = JSON.parse(node?.innerText ?? "{}");
-      this.context.set(
+      handle.context.set(
         storage ?? {
           states: Object.fromEntries(
             Object.entries(states).map(([key, v]) => [
@@ -43,7 +42,7 @@ export function SSRProvider(this: Handle<SSRProps>) {
               {
                 state: "finished",
                 promise: Promise.resolve(v),
-                value: v,
+                value: v as any,
                 children: undefined,
               },
             ])
@@ -54,13 +53,13 @@ export function SSRProvider(this: Handle<SSRProps>) {
     return (
       <>
         {children}
-        {/* {isServer && <Frame src="ssr-data:" />} */}
+        {isServer && <Frame src="ssr-data:" />}
       </>
     );
   };
 }
 
-export function SSRData(this: Handle<SSRResult>) {
+export function SSRData(handle: Handle<{ value: unknown; state: "idle" | "loading" | "finished"; children: RemixNode }, SSRResult>) {
   return ({
     value,
     state,
@@ -70,14 +69,13 @@ export function SSRData(this: Handle<SSRResult>) {
     state: "idle" | "loading" | "finished";
     children: RemixNode;
   }) => {
-    this.context.set({ value, state });
+    handle.context.set({ value, state });
     return children;
   };
 }
 
-export function SSRFetch<T>(
-  this: Handle,
-  {
+export function SSRFetch<T>(handle: Handle) {
+  return ({
     name,
     action,
     children,
@@ -85,36 +83,36 @@ export function SSRFetch<T>(
     name: string;
     action: () => Promise<T>;
     children: RemixNode;
-  }
-) {
-  const context = this.context.get(SSRProvider);
-  if (!context) return undefined;
-  const frameName = `ssr:${name}`;
-  if (!context.states[frameName]) {
-    const promise = action();
-    const state: SSRState<T> = {
-      promise,
-      state: "loading",
-      value: undefined,
-      children,
-    };
-    context.states[frameName] = state;
-    promise.then((v) => {
-      context.states[frameName].state = "finished";
-      context.states[frameName].value = v;
-      if (!isServer) this.update();
-    });
-  }
-  if (isServer) {
-    return <Frame src={frameName} />;
-  } else {
-    const state = context.states[frameName];
-    return (
-      <SSRData value={state.value} state={state.state}>
-        {children}
-      </SSRData>
-    );
-  }
+  }) => {
+    const context = handle.context.get(SSRProvider);
+    if (!context) return undefined;
+    const frameName = `ssr:${name}`;
+    if (!context.states[frameName]) {
+      const promise = action();
+      const state: SSRState<T> = {
+        promise,
+        state: "loading",
+        value: undefined,
+        children,
+      };
+      context.states[frameName] = state;
+      promise.then((v) => {
+        context.states[frameName].state = "finished";
+        context.states[frameName].value = v;
+        if (!isServer) handle.update();
+      });
+    }
+    if (isServer) {
+      return <Frame src={frameName} />;
+    } else {
+      const state = context.states[frameName];
+      return (
+        <SSRData value={state.value} state={state.state}>
+          {children}
+        </SSRData>
+      );
+    }
+  };
 }
 
 export const useSSR = <T,>(inst: Handle) => {

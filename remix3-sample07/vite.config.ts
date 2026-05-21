@@ -6,6 +6,13 @@ import wasmImageOptimizationPlugin from "wasm-image-optimization/vite-plugin";
 
 export default defineConfig(({ isSsrBuild }) => {
   return {
+    esbuild: {
+      jsx: "automatic",
+      jsxImportSource: "remix/ui",
+    },
+    ssr: {
+      noExternal: true,
+    },
     build: {
       outDir: isSsrBuild ? "./dist" : "./dist/assets",
       ssr: isSsrBuild,

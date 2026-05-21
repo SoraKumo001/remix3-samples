@@ -1,4 +1,4 @@
-import { type Handle } from "@remix-run/component";
+import { type Handle, on, ref } from "remix/ui";
 import {
   optimizeImageExt,
   setLimit,
@@ -12,11 +12,11 @@ launchWorker(); // Prepare Worker in advance.
 const classNames = (...classNames: (string | undefined | false)[]) =>
   classNames.reduce(
     (a, b, index) => a + (b ? (index ? " " : "") + b : ""),
-    ""
+    "",
   ) as string | undefined;
 
 const formats = ["none", "avif", "webp", "jpeg", "png"] as const;
-function AsyncImage(this: Handle) {
+function AsyncImage(handle: Handle) {
   let time = 0;
   let image: Awaited<ReturnType<typeof optimizeImageExt>> | null | undefined =
     null;
@@ -72,9 +72,9 @@ function AsyncImage(this: Handle) {
           URL.createObjectURL(
             new Blob([image.data as BufferSource], {
               type: format === "none" ? file.type : `image/${format}`,
-            })
+            }),
           );
-        this.update();
+        handle.update();
       };
       convert();
     }
@@ -110,7 +110,7 @@ function AsyncImage(this: Handle) {
   };
 }
 
-function Page(this: Handle) {
+function Page(handle: Handle) {
   let images: File[] = [];
   let quality = 80;
   let speed = 6;
@@ -126,7 +126,7 @@ function Page(this: Handle) {
     const logText = logs.join("\n");
     const onFiles = (v: File[]) => {
       images = [...images, ...v];
-      this.update();
+      handle.update();
     };
     return (
       <div className="p-4">
@@ -144,56 +144,56 @@ function Page(this: Handle) {
             type="file"
             multiple
             accept=".jpg,.png,.gif,.svg,.avif,.webp"
-            connect={(node) => {
-              refInput = node;
-            }}
-            on={{
-              focus: () => {
+            mix={[
+              ref((node: HTMLInputElement) => {
+                refInput = node;
+              }),
+              on("focus", () => {
                 focus = true;
-                this.update();
-              },
-              blur: () => {
+                handle.update();
+              }),
+              on("blur", () => {
                 focus = false;
-                this.update();
-              },
-              paste: (e) => {
+                handle.update();
+              }),
+              on("paste", (e: ClipboardEvent) => {
                 e.preventDefault();
                 if (e.clipboardData?.files)
                   onFiles(Array.from(e.clipboardData.files));
-              },
-              change: (e) => {
+              }),
+              on("change", (e: Event) => {
                 e.preventDefault();
-                if (e.currentTarget.files)
-                  onFiles(Array.from(e.currentTarget.files));
-              },
-            }}
+                const target = e.currentTarget as HTMLInputElement;
+                if (target.files) onFiles(Array.from(target.files));
+              }),
+            ]}
           />
           <div
             className={classNames(
               "w-64 h-32 border-dashed border flex justify-center items-center cursor-pointer select-none m-2 rounded-4xl p-4",
-              focus && "outline outline-blue-400"
+              focus && "outline outline-blue-400",
             )}
-            on={{
-              dragover: (e) => {
+            mix={[
+              on("dragover", (e: DragEvent) => {
                 e.preventDefault();
                 e.stopPropagation();
-              },
-              dragenter: (e) => {
+              }),
+              on("dragenter", (e: DragEvent) => {
                 e.preventDefault();
                 e.stopPropagation();
-              },
-              dblclick: () => {
+              }),
+              on("dblclick", () => {
                 refInput.click();
-              },
-              click: () => {
+              }),
+              on("click", () => {
                 refInput.focus();
-              },
-              drop: (e) => {
+              }),
+              on("drop", (e: DragEvent) => {
                 if (e.dataTransfer?.files)
                   onFiles(Array.from(e.dataTransfer.files));
                 e.preventDefault();
-              },
-            }}
+              }),
+            ]}
           >
             Drop here, copy and paste or double-click to select the file.
           </div>
@@ -206,13 +206,13 @@ function Page(this: Handle) {
         </div>
         <button
           className="text-blue-700 hover:text-white border border-blue-500 hover:bg-blue-600 rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-pointer"
-          on={{
-            click: () => {
+          mix={[
+            on("click", () => {
               images = [];
               logs = [];
-              this.update();
-            },
-          }}
+              handle.update();
+            }),
+          ]}
         >
           Clear
         </button>
@@ -221,12 +221,13 @@ function Page(this: Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[0]}
-            on={{
-              change: (e) => {
-                size = [Math.max(0, Number(e.currentTarget.value)), size[1]];
-                this.update();
-              },
-            }}
+            mix={[
+              on("change", (e: Event) => {
+                const target = e.currentTarget as HTMLInputElement;
+                size = [Math.max(0, Number(target.value)), size[1]];
+                handle.update();
+              }),
+            ]}
           />
           Width(0:Original)
         </label>
@@ -235,12 +236,13 @@ function Page(this: Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[1]}
-            on={{
-              change: (e) => {
-                size = [size[0], Math.max(0, Number(e.currentTarget.value))];
-                this.update();
-              },
-            }}
+            mix={[
+              on("change", (e: Event) => {
+                const target = e.currentTarget as HTMLInputElement;
+                size = [size[0], Math.max(0, Number(target.value))];
+                handle.update();
+              }),
+            ]}
           />
           Height(0:Original)
         </label>
@@ -249,15 +251,13 @@ function Page(this: Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={speed}
-            on={{
-              change: (e) => {
-                speed = Math.min(
-                  10,
-                  Math.max(0, Number(e.currentTarget.value))
-                );
-                this.update();
-              },
-            }}
+            mix={[
+              on("change", (e: Event) => {
+                const target = e.currentTarget as HTMLInputElement;
+                speed = Math.min(10, Math.max(0, Number(target.value)));
+                handle.update();
+              }),
+            ]}
           />
           Speed(0-10,Slower-Faster): Avif
         </label>
@@ -266,15 +266,13 @@ function Page(this: Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={quality}
-            on={{
-              change: (e) => {
-                quality = Math.min(
-                  100,
-                  Math.max(0, Number(e.currentTarget.value))
-                );
-                this.update();
-              },
-            }}
+            mix={[
+              on("change", (e: Event) => {
+                const target = e.currentTarget as HTMLInputElement;
+                quality = Math.min(100, Math.max(0, Number(target.value)));
+                handle.update();
+              }),
+            ]}
           />
           Quality(0-100): Avif, Jpeg, WebP
         </label>
@@ -283,14 +281,15 @@ function Page(this: Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={limitWorker}
-            on={{
-              change: (e) => {
-                limitWorker = Math.max(1, Number(e.currentTarget.value));
+            mix={[
+              on("change", (e: Event) => {
+                const target = e.currentTarget as HTMLInputElement;
+                limitWorker = Math.max(1, Number(target.value));
                 setLimit(limitWorker);
                 launchWorker();
-                this.update();
-              },
-            }}
+                handle.update();
+              }),
+            ]}
           />
           Web Workers(1-)
         </label>
@@ -299,12 +298,13 @@ function Page(this: Handle) {
             <input
               type="checkbox"
               checked={filter}
-              on={{
-                change: (e) => {
-                  filter = e.currentTarget.checked;
-                  this.update();
-                },
-              }}
+              mix={[
+                on("change", (e: Event) => {
+                  const target = e.currentTarget as HTMLInputElement;
+                  filter = target.checked;
+                  handle.update();
+                }),
+              ]}
             />
           </div>
           Resize filter
@@ -315,14 +315,15 @@ function Page(this: Handle) {
               <input
                 type="checkbox"
                 checked={formatList.includes(format)}
-                on={{
-                  change: (e) => {
-                    const checked = e.currentTarget.checked;
+                mix={[
+                  on("change", (e: Event) => {
+                    const target = e.currentTarget as HTMLInputElement;
+                    const checked = target.checked;
                     if (checked) formatList = [...formatList, format];
                     else formatList = formatList.filter((f) => f !== format);
-                    this.update();
-                  },
-                }}
+                    handle.update();
+                  }),
+                ]}
               />
               {format}
             </label>
@@ -351,7 +352,7 @@ function Page(this: Handle) {
                         }x${v.image.originalHeight}) (${v.image.width}x${
                           v.image.height
                         }) Speed:${speed} Quality:${quality} ${Math.ceil(
-                          v.image.data.length / 1024
+                          v.image.data.length / 1024,
                         )
                           .toLocaleString()
                           .padStart(8)}KB ${v.time
@@ -360,7 +361,7 @@ function Page(this: Handle) {
                           })
                           .padStart(8)}ms`,
                       ].sort((a, b) => (a < b ? -1 : 1));
-                      this.update();
+                      handle.update();
                     }}
                   />
                 ))}
