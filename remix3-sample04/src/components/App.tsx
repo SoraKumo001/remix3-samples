@@ -1,17 +1,16 @@
-import { type Remix } from "@remix-run/dom";
-import { press } from "@remix-run/events/press";
-import { Test } from "./Test";
+import { type Handle, on } from "remix/ui";
+import { Test } from "./Test.js";
 
-export function App(this: Remix.Handle) {
+export function App(handle: Handle) {
   let count = 0;
 
   return () => (
     <>
       <button
-        on={[
-          press(() => {
+        mix={[
+          on("click", () => {
             count++;
-            this.render();
+            handle.update();
           }),
         ]}
       >

@@ -1,17 +1,30 @@
-import { Hono } from "hono";
-import { renderToStream } from "@remix-run/dom/server";
 import { serveStatic } from "@hono/node-server/serve-static";
-import { Layout } from "./root";
+import { Hono } from "hono";
+
+import { renderToStream } from "remix/ui/server";
+import { Layout } from "./root.tsx";
 
 const app = new Hono();
-app.get("/", () => {
-  return new Response(renderToStream(<Layout />), {
-    headers: {
-      "Content-Type": "text/html",
-    },
-  });
-});
+
+// Serve static files from public directory
 app.use("/*", serveStatic({ root: "./public" }));
+
+app.get("*", async (c) => {
+  return new Response(
+    renderToStream(
+      <Layout />,
+
+      // {
+      //   resolveFrame: (src) => resolveFrame(src, storage.states),
+      // }
+    ),
+    {
+      headers: {
+        "Content-Type": "text/html",
+      },
+    },
+  );
+});
 
 if (import.meta.url.endsWith(".js")) console.log("http://localhost:3000");
 

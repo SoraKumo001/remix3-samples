@@ -1,11 +1,10 @@
-import { type Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
+import type { Handle, Props, RemixNode } from "@remix-run/component";
 import { RoutePattern, type RouteMatch } from "@remix-run/route-pattern";
 
 const isServer = typeof window === "undefined";
 
 export function RouterProvider(
-  this: Remix.Handle<{
+  this: Handle<{
     serverUrl: string;
     navigate: (url: string) => void;
     params?: RouteMatch<string>;
@@ -15,18 +14,18 @@ export function RouterProvider(
     serverUrl: "",
     navigate: (url: string) => {
       history.pushState({}, "", url);
-      this.render();
+      this.update();
     },
   };
   this.context.set(context);
 
   const handlePopState = () => {
-    this.render();
+    this.update();
   };
   if (!isServer) {
     addEventListener("popstate", handlePopState);
   }
-  return ({ url, children }: { url?: string; children: Remix.RemixNode }) => {
+  return ({ url, children }: { url?: string; children: RemixNode }) => {
     if (isServer && url) {
       context.serverUrl = url;
     }
@@ -34,7 +33,7 @@ export function RouterProvider(
   };
 }
 
-export const useLocation = (inst: Remix.Handle) => {
+export const useLocation = (inst: Handle) => {
   if (isServer) {
     const url = new URL(inst.context.get(RouterProvider).serverUrl);
     return url.pathname;
@@ -42,7 +41,7 @@ export const useLocation = (inst: Remix.Handle) => {
   return location.pathname;
 };
 
-export const useFullLocation = (inst: Remix.Handle) => {
+export const useFullLocation = (inst: Handle) => {
   if (isServer) {
     const url = new URL(inst.context.get(RouterProvider).serverUrl);
     return url.href;
@@ -50,30 +49,30 @@ export const useFullLocation = (inst: Remix.Handle) => {
   return location.href;
 };
 
-export const useNavigate = (inst: Remix.Handle) => {
+export const useNavigate = (inst: Handle) => {
   return inst.context.get(RouterProvider).navigate;
 };
 
-export const useParams = <T extends Record<string, unknown>>(
-  inst: Remix.Handle
-) => {
+export const useParams = <T extends Record<string, unknown>>(inst: Handle) => {
   const p = inst.context.get(RouterProvider).params;
   if (!p) throw "error params";
   return p.params as T;
 };
 
-export function Link(this: Remix.Handle) {
+export function Link(this: Handle) {
   const navigate = useNavigate(this);
-  return (props: Remix.Props<"a">) => {
+  return (props: Props<"a">) => {
     return (
       <a
         {...props}
-        on={dom.click((e) => {
-          e.preventDefault();
-          if (props.href) {
-            navigate(props.href);
-          }
-        })}
+        on={{
+          click: (e) => {
+            e.preventDefault();
+            if (props.href) {
+              navigate(props.href);
+            }
+          },
+        }}
       >
         {props.children}
       </a>
@@ -81,9 +80,9 @@ export function Link(this: Remix.Handle) {
   };
 }
 
-export type RouteType = Record<string, Remix.Component>;
+export type RouteType = Record<string, unknown>;
 
-export const useRouter = (inst: Remix.Handle, route: RouteType) => {
+export const useRouter = (inst: Handle, route: RouteType) => {
   const location = useFullLocation(inst);
 
   for (const [pattern, content] of Object.entries(route)) {

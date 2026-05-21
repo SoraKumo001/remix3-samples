@@ -1,8 +1,8 @@
-import { type Remix } from "@remix-run/dom";
+import type { Handle } from "@remix-run/component";
 import css from "./index.css?inline";
 // import { App } from "./App";
 
-export function Layout(this: Remix.Handle) {
+export function Layout(this: Handle) {
   return (
     <html lang="ja">
       <head>

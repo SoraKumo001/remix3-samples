@@ -1,4 +1,4 @@
-import { createRoot } from "@remix-run/dom";
+import { createRoot } from "@remix-run/component";
 import { App } from "./App";
 import { SSRProvider } from "./provider/SSRProvider";
 import { RouterProvider } from "./provider/RouterProvider";

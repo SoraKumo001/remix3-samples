@@ -1,5 +1,4 @@
-import { connect, type Remix } from "@remix-run/dom";
-import { dom } from "@remix-run/events";
+import { type Handle } from "@remix-run/component";
 import {
   optimizeImageExt,
   setLimit,
@@ -17,7 +16,7 @@ const classNames = (...classNames: (string | undefined | false)[]) =>
   ) as string | undefined;
 
 const formats = ["none", "avif", "webp", "jpeg", "png"] as const;
-function AsyncImage(this: Remix.Handle) {
+function AsyncImage(this: Handle) {
   let time = 0;
   let image: Awaited<ReturnType<typeof optimizeImageExt>> | null | undefined =
     null;
@@ -75,7 +74,7 @@ function AsyncImage(this: Remix.Handle) {
               type: format === "none" ? file.type : `image/${format}`,
             })
           );
-        this.render();
+        this.update();
       };
       convert();
     }
@@ -111,7 +110,7 @@ function AsyncImage(this: Remix.Handle) {
   };
 }
 
-function Page(this: Remix.Handle) {
+function Page(this: Handle) {
   let images: File[] = [];
   let quality = 80;
   let speed = 6;
@@ -127,7 +126,7 @@ function Page(this: Remix.Handle) {
     const logText = logs.join("\n");
     const onFiles = (v: File[]) => {
       images = [...images, ...v];
-      this.render();
+      this.update();
     };
     return (
       <div className="p-4">
@@ -145,56 +144,56 @@ function Page(this: Remix.Handle) {
             type="file"
             multiple
             accept=".jpg,.png,.gif,.svg,.avif,.webp"
-            on={[
-              connect((e) => {
-                refInput = e.currentTarget;
-              }),
-              dom.focus(() => {
+            connect={(node) => {
+              refInput = node;
+            }}
+            on={{
+              focus: () => {
                 focus = true;
-                this.render();
-              }),
-              dom.blur(() => {
+                this.update();
+              },
+              blur: () => {
                 focus = false;
-                this.render();
-              }),
-              dom.paste((e) => {
+                this.update();
+              },
+              paste: (e) => {
                 e.preventDefault();
                 if (e.clipboardData?.files)
                   onFiles(Array.from(e.clipboardData.files));
-              }),
-              dom.change((e) => {
+              },
+              change: (e) => {
                 e.preventDefault();
                 if (e.currentTarget.files)
                   onFiles(Array.from(e.currentTarget.files));
-              }),
-            ]}
+              },
+            }}
           />
           <div
             className={classNames(
               "w-64 h-32 border-dashed border flex justify-center items-center cursor-pointer select-none m-2 rounded-4xl p-4",
               focus && "outline outline-blue-400"
             )}
-            on={[
-              dom.dragover((e) => {
+            on={{
+              dragover: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-              }),
-              dom.dragenter((e) => {
+              },
+              dragenter: (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-              }),
-              dom.dblclick(() => {
+              },
+              dblclick: () => {
                 refInput.click();
-              }),
-              dom.click(() => {
+              },
+              click: () => {
                 refInput.focus();
-              }),
-              dom.drop((e) => {
+              },
+              drop: (e) => {
                 if (e.dataTransfer?.files)
                   onFiles(Array.from(e.dataTransfer.files));
                 e.preventDefault();
-              }),
-            ]}
+              },
+            }}
           >
             Drop here, copy and paste or double-click to select the file.
           </div>
@@ -207,11 +206,13 @@ function Page(this: Remix.Handle) {
         </div>
         <button
           className="text-blue-700 hover:text-white border border-blue-500 hover:bg-blue-600 rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 cursor-pointer"
-          on={dom.click(() => {
-            images = [];
-            logs = [];
-            this.render();
-          })}
+          on={{
+            click: () => {
+              images = [];
+              logs = [];
+              this.update();
+            },
+          }}
         >
           Clear
         </button>
@@ -220,10 +221,12 @@ function Page(this: Remix.Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[0]}
-            on={dom.change((e) => {
-              size = [Math.max(0, Number(e.currentTarget.value)), size[1]];
-              this.render();
-            })}
+            on={{
+              change: (e) => {
+                size = [Math.max(0, Number(e.currentTarget.value)), size[1]];
+                this.update();
+              },
+            }}
           />
           Width(0:Original)
         </label>
@@ -232,10 +235,12 @@ function Page(this: Remix.Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={size[1]}
-            on={dom.change((e) => {
-              size = [size[0], Math.max(0, Number(e.currentTarget.value))];
-              this.render();
-            })}
+            on={{
+              change: (e) => {
+                size = [size[0], Math.max(0, Number(e.currentTarget.value))];
+                this.update();
+              },
+            }}
           />
           Height(0:Original)
         </label>
@@ -244,10 +249,15 @@ function Page(this: Remix.Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={speed}
-            on={dom.change((e) => {
-              speed = Math.min(10, Math.max(0, Number(e.currentTarget.value)));
-              this.render();
-            })}
+            on={{
+              change: (e) => {
+                speed = Math.min(
+                  10,
+                  Math.max(0, Number(e.currentTarget.value))
+                );
+                this.update();
+              },
+            }}
           />
           Speed(0-10,Slower-Faster): Avif
         </label>
@@ -256,13 +266,15 @@ function Page(this: Remix.Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={quality}
-            on={dom.change((e) => {
-              quality = Math.min(
-                100,
-                Math.max(0, Number(e.currentTarget.value))
-              );
-              this.render();
-            })}
+            on={{
+              change: (e) => {
+                quality = Math.min(
+                  100,
+                  Math.max(0, Number(e.currentTarget.value))
+                );
+                this.update();
+              },
+            }}
           />
           Quality(0-100): Avif, Jpeg, WebP
         </label>
@@ -271,12 +283,14 @@ function Page(this: Remix.Handle) {
             type="number"
             className="border border-gray-300 rounded-4 p-1 w-16"
             value={limitWorker}
-            on={dom.change((e) => {
-              limitWorker = Math.max(1, Number(e.currentTarget.value));
-              setLimit(limitWorker);
-              launchWorker();
-              this.render();
-            })}
+            on={{
+              change: (e) => {
+                limitWorker = Math.max(1, Number(e.currentTarget.value));
+                setLimit(limitWorker);
+                launchWorker();
+                this.update();
+              },
+            }}
           />
           Web Workers(1-)
         </label>
@@ -285,10 +299,12 @@ function Page(this: Remix.Handle) {
             <input
               type="checkbox"
               checked={filter}
-              on={dom.change((e) => {
-                filter = e.currentTarget.checked;
-                this.render();
-              })}
+              on={{
+                change: (e) => {
+                  filter = e.currentTarget.checked;
+                  this.update();
+                },
+              }}
             />
           </div>
           Resize filter
@@ -299,12 +315,14 @@ function Page(this: Remix.Handle) {
               <input
                 type="checkbox"
                 checked={formatList.includes(format)}
-                on={dom.change((e) => {
-                  const checked = e.currentTarget.checked;
-                  if (checked) formatList = [...formatList, format];
-                  else formatList = formatList.filter((f) => f !== format);
-                  this.render();
-                })}
+                on={{
+                  change: (e) => {
+                    const checked = e.currentTarget.checked;
+                    if (checked) formatList = [...formatList, format];
+                    else formatList = formatList.filter((f) => f !== format);
+                    this.update();
+                  },
+                }}
               />
               {format}
             </label>
@@ -342,7 +360,7 @@ function Page(this: Remix.Handle) {
                           })
                           .padStart(8)}ms`,
                       ].sort((a, b) => (a < b ? -1 : 1));
-                      this.render();
+                      this.update();
                     }}
                   />
                 ))}

@@ -1,32 +1,27 @@
 {
-  "name": "remix3-sample04",
+  "name": "remix-test",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && rolldown -c",
+    "build": "vite build && rolldown -c",
     "start": "node dist",
-    "lint": "eslint ."
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=24.3.0"
   },
   "dependencies": {
-    "@hono/vite-dev-server": "0.23.0",
-    "@remix-run/dom": "0.0.0-experimental-remix-jam.6",
-    "@remix-run/events": "0.0.0-experimental-remix-jam.5",
-    "hono": "4.10.4"
+    "@hono/node-server": "2.0.3",
+    "hono": "4.12.21",
+    "remix": "^3.0.0-beta.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
-    "@hono/node-server": "1.19.6",
-    "@hono/vite-build": "1.7.0",
-    "@playwright/test": "1.56.1",
-    "@types/node": "^24.10.0",
-    "eslint": "^9.39.1",
-    "eslint-plugin-react-refresh": "^0.4.24",
-    "globals": "^16.5.0",
-    "rolldown": "1.0.0-beta.47",
-    "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "vite": "npm:rolldown-vite@latest"
+    "@hono/vite-build": "1.11.1",
+    "@hono/vite-dev-server": "0.25.3",
+    "@types/node": "latest",
+    "rolldown": "1.0.2",
+    "typescript": "latest",
+    "vite": "8.0.14"
   }
 }

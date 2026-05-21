@@ -1,4 +1,5 @@
-import { Frame, type Remix } from "@remix-run/dom";
+import type { Handle, RemixNode } from "@remix-run/component";
+import { Frame } from "@remix-run/dom";
 
 const isServer = typeof window === "undefined";
 const SSR_DATA_NAME = "__REMIX3_SSR__";
@@ -9,7 +10,7 @@ type SSRResult<T = unknown> = {
 };
 
 type SSRState<T = unknown> = SSRResult<T> & {
-  children: Remix.RemixNode;
+  children: RemixNode;
   promise: Promise<T>;
 };
 
@@ -17,13 +18,13 @@ export type SSRProps = {
   states: Record<string, SSRState>;
 };
 
-export function SSRProvider(this: Remix.Handle<SSRProps>) {
+export function SSRProvider(this: Handle<SSRProps>) {
   return ({
     storage,
     children,
   }: {
     storage?: SSRProps;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
     if (isServer) {
       this.context.set(
@@ -53,13 +54,13 @@ export function SSRProvider(this: Remix.Handle<SSRProps>) {
     return (
       <>
         {children}
-        {isServer && <Frame src="ssr-data:" />}
+        {/* {isServer && <Frame src="ssr-data:" />} */}
       </>
     );
   };
 }
 
-export function SSRData(this: Remix.Handle<SSRResult>) {
+export function SSRData(this: Handle<SSRResult>) {
   return ({
     value,
     state,
@@ -67,7 +68,7 @@ export function SSRData(this: Remix.Handle<SSRResult>) {
   }: {
     value: unknown;
     state: "idle" | "loading" | "finished";
-    children: Remix.RemixNode;
+    children: RemixNode;
   }) => {
     this.context.set({ value, state });
     return children;
@@ -75,7 +76,7 @@ export function SSRData(this: Remix.Handle<SSRResult>) {
 }
 
 export function SSRFetch<T>(
-  this: Remix.Handle,
+  this: Handle,
   {
     name,
     action,
@@ -83,7 +84,7 @@ export function SSRFetch<T>(
   }: {
     name: string;
     action: () => Promise<T>;
-    children: Remix.RemixNode;
+    children: RemixNode;
   }
 ) {
   const context = this.context.get(SSRProvider);
@@ -101,7 +102,7 @@ export function SSRFetch<T>(
     promise.then((v) => {
       context.states[frameName].state = "finished";
       context.states[frameName].value = v;
-      if (!isServer) this.render();
+      if (!isServer) this.update();
     });
   }
   if (isServer) {
@@ -116,7 +117,7 @@ export function SSRFetch<T>(
   }
 }
 
-export const useSSR = <T,>(inst: Remix.Handle) => {
+export const useSSR = <T,>(inst: Handle) => {
   return inst.context.get(SSRData) as SSRResult<T>;
 };
 

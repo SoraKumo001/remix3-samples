@@ -1,8 +1,8 @@
-import type { Remix } from "@remix-run/dom";
-import { App } from "./components/App";
+import { type Handle } from "remix/ui";
+import { App } from "./components/App.js";
 
-export function Layout(this: Remix.Handle) {
-  return (
+export function Layout(handle: Handle) {
+  return () => (
     <html lang="ja">
       <head>
         <meta charSet="UTF-8" />

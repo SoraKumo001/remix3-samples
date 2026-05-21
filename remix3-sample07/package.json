@@ -11,6 +11,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@remix-run/component": "0.2.1",
     "@remix-run/dom": "0.0.0-experimental-remix-jam.6",
     "@remix-run/events": "0.0.0-experimental-remix-jam.5",
     "@remix-run/route-pattern": "0.15.0",
@@ -18,18 +19,18 @@
     "wasm-image-optimization": "1.4.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
+    "@eslint/js": "^9.39.2",
     "@hono/vite-build": "1.7.0",
     "@hono/vite-dev-server": "0.23.0",
     "@playwright/test": "1.56.1",
     "@tailwindcss/vite": "4.1.17",
-    "@types/node": "^24.10.0",
-    "eslint": "^9.39.1",
+    "@types/node": "^24.10.4",
+    "eslint": "^9.39.2",
     "globals": "^16.5.0",
     "tailwindcss": "4.1.17",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.3",
-    "vite": "npm:rolldown-vite@latest",
-    "wrangler": "^4.46.0"
+    "typescript-eslint": "^8.51.0",
+    "vite": "npm:rolldown-vite@^7.3.0",
+    "wrangler": "^4.54.0"
   }
 }
