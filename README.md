@@ -22,4 +22,4 @@
   [remix3-sample07](./remix3-sample07)
 
 - Weather Forecast(SSR + FileBase-Routing + Tailwind + Cloudflare + DataLoader)  
-  [remix3-sample06](./remix3-sample06)
+  [remix3-sample08](./remix3-sample08)
