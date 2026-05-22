@@ -121,8 +121,9 @@ export const useSSR = <T,>(inst: Handle) => {
 
 export const resolveFrame = async (
   src: string,
-  states: Record<string, SSRState>
-) => {
+  states: Record<string, SSRState>,
+  render: (node: RemixNode) => Promise<string> | string
+): Promise<string> => {
   if (src === "ssr-data:") {
     let length = 0;
     while (length !== Object.values(states).length) {
@@ -133,17 +134,14 @@ export const resolveFrame = async (
     for (const [key, p] of Object.entries(states)) {
       values[key] = await p.promise;
     }
-    return (
-      <script type="application/json" id={SSR_DATA_NAME}>
-        {JSON.stringify(values)}
-      </script>
-    );
+    const serializedData = JSON.stringify(values).replace(/</g, "\\u003c");
+    return `<script type="application/json" id="${SSR_DATA_NAME}">${serializedData}</script>`;
   }
   const state = states[src];
   const children = state.children;
   const value = await state.promise;
   state.value = value;
-  return (
+  return render(
     <SSRData value={value} state={state.state}>
       {children}
     </SSRData>

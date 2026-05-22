@@ -9,22 +9,27 @@ import { RouterProvider } from "./provider/RouterProvider";
 
 const handler = (url: string) => {
   const storage: SSRProps = { states: {} };
+  const routerContext = {
+    serverUrl: url,
+    navigate: () => {},
+  };
+
   return new Response(
     renderToStream(
-      <RouterProvider url={url}>
+      <RouterProvider value={routerContext}>
         <SSRProvider storage={storage}>
           <Layout />
         </SSRProvider>
       </RouterProvider>,
       {
-        resolveFrame: async (src) => {
-          const node = await resolveFrame(src, storage.states);
-          return renderToString(
-            <RouterProvider url={url}>
-              {node}
-            </RouterProvider>
-          );
-        },
+        resolveFrame: (src) =>
+          resolveFrame(src, storage.states, (node) =>
+            renderToString(
+              <RouterProvider value={routerContext}>
+                {node}
+              </RouterProvider>
+            )
+          ),
       }
     ),
     {

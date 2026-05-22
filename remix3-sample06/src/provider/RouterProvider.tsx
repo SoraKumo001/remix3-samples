@@ -11,7 +11,7 @@ interface RouterContext {
 }
 
 export function RouterProvider(
-  handle: Handle<{ url?: string; children: RemixNode }, RouterContext>
+  handle: Handle<{ url?: string; value?: RouterContext; children: RemixNode }, RouterContext>
 ) {
   const context: RouterContext = {
     serverUrl: "",
@@ -31,7 +31,11 @@ export function RouterProvider(
       removeEventListener("popstate", handlePopState);
     });
   }
-  return ({ url, children }: { url?: string; children: RemixNode }) => {
+  return ({ url, value, children }: { url?: string; value?: RouterContext; children: RemixNode }) => {
+    if (value) {
+      handle.context.set(value);
+      return <>{children}</>;
+    }
     if (isServer && url) {
       context.serverUrl = url;
     }
@@ -100,7 +104,7 @@ export const useRouter = (inst: Handle<any, any>, route: RouteType) => {
       return content;
     }
   }
-  return () => <></>;
+  return () => () => <></>;
 };
 
 export function Outlet(handle: Handle) {
