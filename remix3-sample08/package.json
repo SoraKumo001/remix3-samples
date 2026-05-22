@@ -1,0 +1,33 @@
+{
+  "name": "remix3-sample06",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --ssr && vite build",
+    "start": "pnpm run build && wrangler dev",
+    "deploy": "pnpm run build && wrangler deploy",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@remix-run/route-pattern": "0.15.0",
+    "hono": "4.10.4",
+    "remix": "^3.0.0-beta.2"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@hono/vite-build": "1.7.0",
+    "@hono/vite-dev-server": "0.23.0",
+    "@playwright/test": "1.56.1",
+    "@tailwindcss/vite": "4.1.17",
+    "@types/node": "^24.10.0",
+    "eslint": "^9.39.1",
+    "globals": "^16.5.0",
+    "tailwindcss": "4.1.17",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.3",
+    "vite": "npm:rolldown-vite@latest",
+    "wrangler": "^4.46.0"
+  }
+}
