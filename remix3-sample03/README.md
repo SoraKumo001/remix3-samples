@@ -54,18 +54,30 @@ console.log("http://localhost:3000");
 ## src/client.tsx
 
 ```tsx
-import { createRoot } from "remix/ui";
-import { App } from "./App.tsx";
+import { run } from "remix/ui";
 
-if (document.body) {
-  createRoot(document.body).render(<App />);
-} else {
-  window.addEventListener(
-    "DOMContentLoaded",
-    () => {
-      createRoot(document.body).render(<App />);
-    },
-    { once: true }
-  );
-}
+const app = run({
+  async loadModule(moduleUrl, exportName) {
+    const mod = await import(moduleUrl);
+    return mod[exportName];
+  },
+});
+
+await app.ready();
+```
+
+---
+
+## Commands
+
+### Build
+
+```sh
+pnpm build
+```
+
+### Start Server
+
+```sh
+pnpm start
 ```
