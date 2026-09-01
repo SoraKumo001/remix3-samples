@@ -14,7 +14,7 @@
     "@remix-run/route-pattern": "0.24.0",
     "hono": "4.13.5",
     "remix": "^3.0.0-rc.1",
-    "wasm-image-optimization": "2.0.9"
+    "wasm-image-optimization": "2.0.10"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

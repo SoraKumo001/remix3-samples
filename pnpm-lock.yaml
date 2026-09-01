@@ -230,8 +230,8 @@ importers:
         specifier: ^3.0.0-rc.1
         version: 3.0.0-rc.1(@emnapi/core@1.11.2)(@emnapi/runtime@1.11.3)(playwright@1.62.1)
       wasm-image-optimization:
-        specifier: 2.0.9
-        version: 2.0.9
+        specifier: 2.0.10
+        version: 2.0.10
     devDependencies:
       '@eslint/js':
         specifier: ^10.0.1
@@ -2335,9 +2335,9 @@ packages:
     resolution: {integrity: sha512-TQMmc3w+5AxjpL8iIiwebF73dRDF4fBIieAqGn9RGCWaEVwQ6Fb2cGe31Yns0RRIzii5goJ1Y7xbMwo1TxMplw==}
     engines: {node: '>= 20.19.0'}
 
-  commander@14.0.3:
-    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
-    engines: {node: '>=20'}
+  commander@15.0.0:
+    resolution: {integrity: sha512-z67u4ZhzCL/Tydu1lJARtEZYWbWaN7oYLHbsuzocr6y4N6WZAagG3RQ4FW61V1/0+jImpj293XfrcYnd1qxtPg==}
+    engines: {node: '>=22.12.0'}
 
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
@@ -3035,8 +3035,8 @@ packages:
       yaml:
         optional: true
 
-  wasm-image-optimization@2.0.9:
-    resolution: {integrity: sha512-g8Pj+vk+Sijex1MISslN0LBUnDdoqmYmaVho6cekwfe/6RQt4U9P5cmkvsHVUlj/ZDgeAjaOvoiTOwJOg3uBag==}
+  wasm-image-optimization@2.0.10:
+    resolution: {integrity: sha512-O2hMEuaQmNkbkmz0Kvh2RZ4T6F2sAx8jeRBYg01IWpyJ4TkxY41z9zGYwZUhNFZTb6060/XWPe2N10mgD5jRng==}
     hasBin: true
 
   which@2.0.2:
@@ -3048,8 +3048,8 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
-  worker-lib@2.2.0:
-    resolution: {integrity: sha512-femfnzMFgw9Uvj9LUJ1bkIi/3PJavpZNCgq9OGsrcCzxmRp2+RGkq1d+kjsvOxC8JKIAI7K4+laeq8cMWT2AYQ==}
+  worker-lib@2.2.1:
+    resolution: {integrity: sha512-CauU4vz3vZUBG3A2CY93GY94KLhbH8JtPKtuvKu2w5G07cHkZ73QkTAJ/lEHDL6arT5WDu1qpU++T0+kGDgSCg==}
 
   workerd@1.20260828.1:
     resolution: {integrity: sha512-pB9yvt0kkwZDAGZHmpY59r0o3hM0DzdW6BJERqwZOhunZ3ssOyDSgQxOQer2cSZW4YCFeOTIQYN1qwhK5wv/Cw==}
@@ -4498,7 +4498,7 @@ snapshots:
     dependencies:
       readdirp: 5.1.1
 
-  commander@14.0.3: {}
+  commander@15.0.0: {}
 
   convert-source-map@2.0.0: {}
 
@@ -5334,10 +5334,10 @@ snapshots:
       jiti: 2.7.0
       tsx: 4.23.13
 
-  wasm-image-optimization@2.0.9:
+  wasm-image-optimization@2.0.10:
     dependencies:
-      commander: 14.0.3
-      worker-lib: 2.2.0
+      commander: 15.0.0
+      worker-lib: 2.2.1
 
   which@2.0.2:
     dependencies:
@@ -5345,7 +5345,7 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
-  worker-lib@2.2.0: {}
+  worker-lib@2.2.1: {}
 
   workerd@1.20260828.1:
     optionalDependencies:

@@ -4,40 +4,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { remixRoutes } from "./vite-plugin/remix-routes";
 import wasmImageOptimizationPlugin from "wasm-image-optimization/vite-plugin";
 
-import path from "node:path";
-import { createRequire } from "node:module";
-
-const require = createRequire(import.meta.url);
-const workerLibMain = require.resolve("worker-lib");
-const workerLibNodeEsm = path.resolve(
-  path.dirname(workerLibMain),
-  "../esm/node.js",
-);
-const workerLibBrowserEsm = path.resolve(
-  path.dirname(workerLibMain),
-  "../esm/index.js",
-);
-
-function workerLibPlugin() {
-  return {
-    name: "worker-lib-resolver",
-    enforce: "pre" as const,
-    resolveId(
-      source: string,
-      _importer: string | undefined,
-      options?: { ssr?: boolean },
-    ) {
-      if (source === "worker-lib") {
-        const isSSR = Boolean(
-          (options && options.ssr) ||
-          (this as any)?.environment?.name === "ssr",
-        );
-        return isSSR ? workerLibNodeEsm : workerLibBrowserEsm;
-      }
-    },
-  };
-}
-
 export default defineConfig(({ isSsrBuild }) => {
   return {
     esbuild: {
@@ -64,7 +30,6 @@ export default defineConfig(({ isSsrBuild }) => {
     },
     publicDir: isSsrBuild ? false : undefined,
     plugins: [
-      workerLibPlugin(),
       devServer({
         entry: "worker/app.ts",
         exclude: [
