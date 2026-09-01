@@ -1,30 +1,13 @@
-import { createRoot } from "remix/ui";
-import { App } from "./components/App";
-import { SSRProvider } from "./SSRProvider";
-import { RouterProvider } from "./RouterProvider";
-if (document.body) {
-  createRoot(document.body).render(
-    <RouterProvider url={location.toString()}>
-      <SSRProvider>
-        <App />
-      </SSRProvider>
-    </RouterProvider>
-  );
-} else {
-  window.addEventListener(
-    "DOMContentLoaded",
-    () => {
-      createRoot(document.body).render(
-        <RouterProvider url={location.toString()}>
-          <SSRProvider>
-            <App />
-          </SSRProvider>
-        </RouterProvider>
-      );
-    },
-    { once: true }
-  );
-}
+import { run } from "remix/ui";
+
+const app = run({
+  async loadModule(moduleUrl, exportName) {
+    const mod = await import(moduleUrl);
+    return mod[exportName];
+  },
+});
+
+await app.ready();
 
 if (import.meta.hot) {
   import.meta.hot.accept(() => {});

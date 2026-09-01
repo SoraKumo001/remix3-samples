@@ -1,5 +1,5 @@
 import { type Handle, on, type RemixNode } from "remix/ui";
-import { RoutePattern, type RouteMatch } from "@remix-run/route-pattern";
+import { createMatcher, type Match } from "@remix-run/route-pattern/match";
 import { route, loaders } from "virtual:routes";
 
 const isServer = typeof window === "undefined";
@@ -7,14 +7,14 @@ const isServer = typeof window === "undefined";
 interface RouterContext {
   serverUrl: string;
   navigate: (url: string) => void;
-  params?: RouteMatch<string>;
+  params?: Match<string, undefined>;
   loaderData: Record<string, any>;
 }
 
 export const matchRoute = (url: string) => {
   for (const [pattern, content] of Object.entries(route)) {
-    const p = new RoutePattern(pattern);
-    const match = p.match(url);
+    const matcher = createMatcher(pattern);
+    const match = matcher.match(url);
     if (match) {
       return {
         routePath: pattern,
@@ -27,10 +27,15 @@ export const matchRoute = (url: string) => {
 };
 
 export function RouterProvider(
-  handle: Handle<{ url?: string; value?: RouterContext; children: RemixNode }, RouterContext>
+  handle: Handle<
+    { url?: string; value?: RouterContext; children: RemixNode },
+    RouterContext
+  >,
 ) {
   const initialLoaderData = !isServer
-    ? JSON.parse(document.getElementById("__REMIX3_LOADER_DATA__")?.textContent || "{}")
+    ? JSON.parse(
+        document.getElementById("__REMIX3_LOADER_DATA__")?.textContent || "{}",
+      )
     : {};
 
   const context: RouterContext = {
@@ -81,7 +86,8 @@ export function RouterProvider(
       removeEventListener("popstate", handlePopState);
     });
   }
-  return ({ url, value, children }: { url?: string; value?: RouterContext; children: RemixNode }) => {
+  return () => {
+    const { url, value, children } = handle.props;
     if (value) {
       handle.context.set(value);
       return <>{children}</>;
@@ -114,27 +120,20 @@ export const useNavigate = (inst: Handle<any, any>) => {
 };
 
 export const useParams = <T extends Record<string, unknown>>(
-  inst: Handle<any, any>
+  inst: Handle<any, any>,
 ) => {
   const p = inst.context.get(RouterProvider).params;
   if (!p) throw "error params";
   return p.params as T;
 };
 
-export function Link(handle: Handle) {
-  const navigate = useNavigate(handle);
-  return ({ to, children, className }: { to: string; children: RemixNode; className?: string }) => {
+export function Link(
+  handle: Handle<{ to: string; children: RemixNode; className?: string }>,
+) {
+  return () => {
+    const { to, children, className } = handle.props;
     return (
-      <a
-        href={to}
-        className={className}
-        mix={[
-          on("click", (e) => {
-            e.preventDefault();
-            navigate(to);
-          }),
-        ]}
-      >
+      <a href={to} className={className}>
         {children}
       </a>
     );
@@ -147,8 +146,8 @@ export const useRouter = (inst: Handle<any, any>, route: RouteType) => {
   const location = useFullLocation(inst);
 
   for (const [pattern, content] of Object.entries(route)) {
-    const p = new RoutePattern(pattern);
-    const match = p.match(location);
+    const matcher = createMatcher(pattern);
+    const match = matcher.match(location);
     if (match) {
       inst.context.get(RouterProvider).params = match;
       return content;
@@ -166,8 +165,8 @@ export function Outlet(handle: Handle) {
     let Route: any = null;
 
     for (const [pattern, content] of Object.entries(route)) {
-      const p = new RoutePattern(pattern);
-      const match = p.match(location);
+      const matcher = createMatcher(pattern);
+      const match = matcher.match(location);
       if (match) {
         routerContext.params = match;
         activeRoutePath = pattern;

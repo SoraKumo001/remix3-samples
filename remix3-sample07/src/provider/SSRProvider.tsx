@@ -17,19 +17,16 @@ export type SSRProps = {
   states: Record<string, SSRState>;
 };
 
-export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: RemixNode }, SSRProps>) {
-  return ({
-    storage,
-    children,
-  }: {
-    storage?: SSRProps;
-    children: RemixNode;
-  }) => {
+export function SSRProvider(
+  handle: Handle<{ storage?: SSRProps; children: RemixNode }, SSRProps>,
+) {
+  return () => {
+    const { storage, children } = handle.props;
     if (isServer) {
       handle.context.set(
         storage ?? {
           states: {},
-        }
+        },
       );
     } else {
       const node = document.getElementById(SSR_DATA_NAME);
@@ -45,9 +42,9 @@ export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: Remix
                 value: v as any,
                 children: undefined,
               },
-            ])
+            ]),
           ),
-        }
+        },
       );
     }
     return (
@@ -59,31 +56,32 @@ export function SSRProvider(handle: Handle<{ storage?: SSRProps; children: Remix
   };
 }
 
-export function SSRData(handle: Handle<{ value: unknown; state: "idle" | "loading" | "finished"; children: RemixNode }, SSRResult>) {
-  return ({
-    value,
-    state,
-    children,
-  }: {
-    value: unknown;
-    state: "idle" | "loading" | "finished";
-    children: RemixNode;
-  }) => {
+export function SSRData(
+  handle: Handle<
+    {
+      value: unknown;
+      state: "idle" | "loading" | "finished";
+      children: RemixNode;
+    },
+    SSRResult
+  >,
+) {
+  return () => {
+    const { value, state, children } = handle.props;
     handle.context.set({ value, state });
     return children;
   };
 }
 
-export function SSRFetch<T>(handle: Handle) {
-  return ({
-    name,
-    action,
-    children,
-  }: {
+export function SSRFetch<T>(
+  handle: Handle<{
     name: string;
     action: () => Promise<T>;
     children: RemixNode;
-  }) => {
+  }>,
+) {
+  return () => {
+    const { name, action, children } = handle.props;
     const context = handle.context.get(SSRProvider);
     if (!context) return undefined;
     const frameName = `ssr:${name}`;
@@ -121,7 +119,7 @@ export const useSSR = <T,>(inst: Handle) => {
 
 export const resolveFrame = async (
   src: string,
-  states: Record<string, SSRState>
+  states: Record<string, SSRState>,
 ) => {
   if (src === "ssr-data:") {
     let length = 0;

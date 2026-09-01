@@ -1,27 +1,23 @@
-import { createRoot } from "remix/ui";
-import { App } from "./App";
-import { SSRProvider } from "./provider/SSRProvider";
-import { RouterProvider } from "./provider/RouterProvider";
+import { run } from "remix/ui";
 
-const Render = (
-  <RouterProvider>
-    <SSRProvider>
-      <App />
-    </SSRProvider>
-  </RouterProvider>
-);
+const modules = import.meta.glob("./**/*.tsx");
 
-if (document.body) {
-  createRoot(document.body).render(Render);
-} else {
-  window.addEventListener(
-    "DOMContentLoaded",
-    () => {
-      createRoot(document.body).render(Render);
-    },
-    { once: true }
-  );
-}
+const app = run({
+  async loadModule(moduleUrl, exportName) {
+    const cleanUrl = moduleUrl.startsWith("/src/")
+      ? `.${moduleUrl.slice(4)}`
+      : moduleUrl;
+    const loader = modules[cleanUrl] ?? modules[moduleUrl];
+    if (loader) {
+      const mod: any = await loader();
+      return mod[exportName];
+    }
+    const mod = await import(/* @vite-ignore */ moduleUrl);
+    return mod[exportName];
+  },
+});
+
+await app.ready();
 
 if (import.meta.hot) {
   import.meta.hot.accept(() => {});

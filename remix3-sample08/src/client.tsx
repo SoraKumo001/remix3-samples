@@ -1,24 +1,13 @@
-import { createRoot } from "remix/ui";
-import { App } from "./App";
-import { RouterProvider } from "./provider/RouterProvider";
+import { run } from "remix/ui";
 
-const Render = (
-  <RouterProvider>
-    <App />
-  </RouterProvider>
-);
+const app = run({
+  async loadModule(moduleUrl, exportName) {
+    const mod = await import(moduleUrl);
+    return mod[exportName];
+  },
+});
 
-if (document.body) {
-  createRoot(document.body).render(Render);
-} else {
-  window.addEventListener(
-    "DOMContentLoaded",
-    () => {
-      createRoot(document.body).render(Render);
-    },
-    { once: true }
-  );
-}
+await app.ready();
 
 if (import.meta.hot) {
   import.meta.hot.accept(() => {});

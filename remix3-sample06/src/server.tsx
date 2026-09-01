@@ -17,26 +17,23 @@ const handler = (url: string) => {
   return new Response(
     renderToStream(
       <RouterProvider value={routerContext}>
-        <SSRProvider storage={storage}>
-          <Layout />
-        </SSRProvider>
+        <Layout storage={storage} />
       </RouterProvider>,
+
       {
         resolveFrame: (src) =>
           resolveFrame(src, storage.states, (node) =>
             renderToString(
-              <RouterProvider value={routerContext}>
-                {node}
-              </RouterProvider>
-            )
+              <RouterProvider value={routerContext}>{node}</RouterProvider>,
+            ),
           ),
-      }
+      },
     ),
     {
       headers: {
         "Content-Type": "text/html",
       },
-    }
+    },
   );
 };
 

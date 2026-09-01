@@ -1,8 +1,9 @@
 import { type Handle } from "remix/ui";
 import css from "./index.css?inline";
 import { App } from "./App";
+import { SSRProvider, type SSRProps } from "./provider/SSRProvider";
 
-export function Layout(handle: Handle) {
+export function Layout(handle: Handle<{ storage?: SSRProps }>) {
   return () => {
     return (
       <html lang="ja">
@@ -24,8 +25,9 @@ export function Layout(handle: Handle) {
           <title>Remix3 Test</title>
         </head>
         <body>
-          {/* Due to a bug in Remix3, attempting to SSR causes hydration to fail. */}
-          <App />
+          <SSRProvider storage={handle.props.storage}>
+            <App />
+          </SSRProvider>
         </body>
       </html>
     );

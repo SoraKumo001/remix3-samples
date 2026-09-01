@@ -12,10 +12,9 @@ const handler = (url: string) => {
   return new Response(
     renderToStream(
       <RouterProvider url={url}>
-        <SSRProvider storage={storage}>
-          <Layout />
-        </SSRProvider>
+        <Layout storage={storage} />
       </RouterProvider>,
+
       {
         resolveFrame: async (src) => {
           const node = await resolveFrame(src, storage.states);
