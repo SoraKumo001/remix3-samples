@@ -1,8 +1,8 @@
 import { type Handle, on } from "remix/ui";
 
-function Test(handle: Handle) {
+function Test(handle: Handle<{ value: string }>) {
   let mouseState = "mouseOut";
-  return ({ value }: { value: string }) => (
+  return () => (
     <div
       mix={[
         on("mouseover", () => {
@@ -15,7 +15,7 @@ function Test(handle: Handle) {
         }),
       ]}
     >
-      {value}:{mouseState}
+      {handle.props.value}:{mouseState}
     </div>
   );
 }

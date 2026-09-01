@@ -1,6 +1,5 @@
 import { type Handle, on, type RemixNode } from "remix/ui";
 
-
 const isServer = typeof window === "undefined";
 
 interface RouterContext {
@@ -9,7 +8,7 @@ interface RouterContext {
 }
 
 export function RouterProvider(
-  handle: Handle<{ url: string; children: RemixNode }, RouterContext>
+  handle: Handle<{ url: string; children: RemixNode }, RouterContext>,
 ) {
   const context: RouterContext = {
     url: "",
@@ -29,9 +28,9 @@ export function RouterProvider(
       removeEventListener("popstate", handlePopState);
     });
   }
-  return ({ url, children }: { url: string; children: RemixNode }) => {
-    context.url = url;
-    return <>{children}</>;
+  return () => {
+    context.url = handle.props.url;
+    return <>{handle.props.children}</>;
   };
 }
 
@@ -47,20 +46,20 @@ export const useNavigate = (inst: Handle<any, any>) => {
   return inst.context.get(RouterProvider).navigate;
 };
 
-export function Link(handle: Handle) {
+export function Link(handle: Handle<{ to: string; children: RemixNode }>) {
   const navigate = useNavigate(handle);
-  return ({ to, children }: { to: string; children: RemixNode }) => {
+  return () => {
     return (
       <a
-        href={to}
+        href={handle.props.to}
         mix={[
           on("click", (e) => {
             e.preventDefault();
-            navigate(to);
+            navigate(handle.props.to);
           }),
         ]}
       >
-        {children}
+        {handle.props.children}
       </a>
     );
   };

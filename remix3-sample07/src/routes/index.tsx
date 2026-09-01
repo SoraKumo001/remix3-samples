@@ -1,10 +1,10 @@
 import { type Handle, on, ref } from "remix/ui";
 import {
-  optimizeImageExt,
+  optimizeImage,
   setLimit,
   waitReady,
   launchWorker,
-} from "wasm-image-optimization/web-worker";
+} from "wasm-image-optimization/workers";
 
 setLimit(8); // Web Worker limit
 launchWorker(); // Prepare Worker in advance.
@@ -16,35 +16,32 @@ const classNames = (...classNames: (string | undefined | false)[]) =>
   ) as string | undefined;
 
 const formats = ["none", "avif", "webp", "jpeg", "png"] as const;
-function AsyncImage(handle: Handle) {
-  let time = 0;
-  let image: Awaited<ReturnType<typeof optimizeImageExt>> | null | undefined =
-    null;
-  let src: string | null | undefined;
-  const property: { isInit?: boolean } = {};
-  return ({
-    file,
-    format,
-    quality,
-    size,
-    speed,
-    filter,
-    onFinished,
-  }: {
-    file: File;
+
+interface AsyncImageProps {
+  file: File;
+  format: (typeof formats)[number];
+  quality: number;
+  speed: number;
+  filter: boolean;
+  size: [number, number];
+  onFinished?: (p: {
+    image: NonNullable<Awaited<ReturnType<typeof optimizeImage>>>;
     format: (typeof formats)[number];
     quality: number;
     speed: number;
-    filter: boolean;
-    size: [number, number];
-    onFinished?: (p: {
-      image: NonNullable<Awaited<ReturnType<typeof optimizeImageExt>>>;
-      format: (typeof formats)[number];
-      quality: number;
-      speed: number;
-      time: number;
-    }) => void;
-  }) => {
+    time: number;
+  }) => void;
+}
+
+function AsyncImage(handle: Handle<AsyncImageProps>) {
+  let time = 0;
+  let image: Awaited<ReturnType<typeof optimizeImage>> | null | undefined =
+    null;
+  let src: string | null | undefined;
+  const property: { isInit?: boolean } = {};
+  return () => {
+    const { file, format, quality, size, speed, filter, onFinished } =
+      handle.props;
     if (!property.isInit) {
       property.isInit = true;
       const convert = async () => {
@@ -54,12 +51,11 @@ function AsyncImage(handle: Handle) {
         await waitReady();
         const buffer = await file.arrayBuffer();
         const t = performance.now();
-        image = await optimizeImageExt({
+        image = await optimizeImage({
           image: buffer,
-          format,
+          format: format === "none" ? undefined : format,
           quality,
           speed,
-          filter,
           width: size[0] || undefined,
           height: size[1] || undefined,
         });

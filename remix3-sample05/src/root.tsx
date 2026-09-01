@@ -2,8 +2,8 @@ import type { Handle } from "remix/ui";
 import { App } from "./components/App";
 import { SSRProvider, type SSRProps } from "./SSRProvider";
 
-export function Layout(_handle: Handle) {
-  return ({ storage }: { storage: SSRProps }) => (
+export function Layout(handle: Handle<{ storage?: SSRProps }>) {
+  return () => (
     <html lang="ja">
       <head>
         <meta charSet="UTF-8" />
@@ -19,7 +19,7 @@ export function Layout(_handle: Handle) {
         <title>Remix3 Test</title>
       </head>
       <body>
-        <SSRProvider storage={storage}>
+        <SSRProvider storage={handle.props.storage}>
           <App />
         </SSRProvider>
       </body>

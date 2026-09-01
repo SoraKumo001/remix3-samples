@@ -10,13 +10,13 @@ interface WeatherData {
   text: string;
 }
 
-export function Weather(_handle: Handle) {
-  return ({ id }: { id: string }) => (
+export function Weather(handle: Handle<{ id: string }>) {
+  return () => (
     <SSRFetch
-      name={`weather-${id}`}
+      name={`weather-${handle.props.id}`}
       action={() =>
         fetch(
-          `https://www.jma.go.jp/bosai/forecast/data/overview_forecast/${id}.json`
+          `https://www.jma.go.jp/bosai/forecast/data/overview_forecast/${handle.props.id}.json`,
         ).then((v) => v.json())
       }
     >

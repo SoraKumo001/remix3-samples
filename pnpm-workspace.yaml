@@ -1,2 +1,6 @@
 packages:
-  - "**/*"
+  - "remix3-sample*"
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
